@@ -1,0 +1,215 @@
+let globalVar: int; // Top-level variable declaration
+
+namespace MyNamespace {
+    // --- 2. Memory Management and Types ---
+    #stack let stackVar: int = 10;
+    #heap let heapVar: float = 3.14;
+    #static let staticVar: bool = true;
+
+    let basicType: int;
+    let unionType: int | string;
+    let arrayType: float[];
+    let sizedArray: bool[4];
+    let rawPtr: int@;
+    let unsafePtr: int@unsafe;
+    let alignedPtr: float@aligned(16);
+    let refType: string&;
+    let sharedPtr: #shared<MyClass>;
+    let uniquePtr: #unique<AnotherClass> ;
+    let weakPtr: #weak<MyClass>;
+
+    let qualifiedNameVar: MyNamespace.InnerClass;
+}
+
+// --- 3. Functions and Parameters ---
+#inline #unsafe #simd #target("x86")
+function complexFunction<T extends number, U>(
+    p1: int, 
+    const p2: string = "default", 
+    ref p3: T
+): float throws ErrorType where T: number {
+    // function body
+    return 0.0;
+}
+
+function simpleFunc(a: int): void {
+    // ...
+}
+
+// --- 4. Classes and Interfaces ---
+#aligned(64) #packed #abstract
+class MyClass<T> extends BaseClass implements Interface1, Interface2 {
+    public field1: int;
+    private field2: #shared<string>;
+    protected field3: float = 1.0;
+
+    #inline
+    constructor(arg: int) {
+        this.field1 = arg;
+    }
+
+    #virtual
+    public method1(p: T): bool {
+        return true;
+    }
+
+    private method2(): void {
+        // ...
+    }
+
+    get myProp(): int { return this.field1; }
+    set myProp(value: int) { this.field1 = value; }
+}
+
+#zerocast
+interface Interface1<T> extends BaseInterface {
+    methodSignature(p1: T): int;
+    getProperty: string;
+    setProperty(value: string): void;
+}
+
+class AnotherClass {}
+class BaseClass {}
+interface BaseInterface {}
+class ErrorType {}
+namespace MyNamespace { class InnerClass{} }
+
+// --- 5. Control Flow and Statements ---
+function controlFlowExample(n: int): void {
+    let x: int = n + 5; // Expression Statement
+
+    { // Block Statement
+        let y: int = 10;
+    }
+
+    if (x > 10) {
+        simpleFunc(x);
+    } else if (x < 0) {
+        simpleFunc(0);
+    } else {
+        simpleFunc(5);
+    }
+
+    switch (x % 3) {
+        case 0:
+            break;
+        case 1:
+        case 2:
+            simpleFunc(1);
+            break;
+        default:
+            simpleFunc(-1);
+    }
+
+    while (x > 0) {
+        x = x - 1;
+    }
+
+    do {
+        x = x + 1;
+    } while (x < 5);
+
+    for (let i: int = 0; i < 10; i = i + 1) {
+        simpleFunc(i);
+    }
+
+    let arr: int[] = [1, 2, 3];
+    for (const item of arr) {
+        simpleFunc(item);
+    }
+
+    try {
+        complexFunction<int, string>(1, "test", 5);
+    } catch (e: ErrorType) {
+        simpleFunc(0);
+    } finally {
+        simpleFunc(-1);
+    }
+
+    return x; // Jump Statement
+    break;    // Jump Statement
+    continue; // Jump Statement
+    throw new ErrorType(); // Jump Statement
+
+    #asm("mov eax, 1", "constraint1"); // Assembly Statement
+}
+
+// --- 6. Expressions ---
+function expressionExamples(): void {
+    let a: int = 10;
+    let b: int = 20;
+    let c: bool;
+
+    a = b;
+    a += 5;
+
+    c = (a > b) ? true : false; // Conditional
+
+    c = a > 5 && b < 30; // Logical AND
+    c = a < 0 || b > 0;  // Logical OR
+
+    a = b | 1;  // Bitwise OR
+    a = b ^ 2;  // Bitwise XOR
+    a = b & 3;  // Bitwise AND
+
+    c = a == b; // Equality
+    c = a != 15;
+
+    c = a < b;  // Relational
+    c = a >= 10;
+
+    a = b << 1; // Shift
+    a = b >> 2;
+
+    a = b + 5; // Additive
+    a = a - 3;
+
+    a = b * 2; // Multiplicative
+    a = b / 4;
+    a = b % 3;
+
+    a = -b;      // Unary prefix minus
+    c = !c;      // Unary prefix not
+    a = ++b;     // Unary prefix increment
+    a = b++;     // Unary postfix increment
+
+    let ptrVar: int@;
+    ptrVar = @a; // Address-of
+    b = *ptrVar; // Dereference
+    // let castVar = cast<float>a; // Cast - Note: Type parsing needed for full verification
+
+    let obj: MyClass<int>;
+    let memberVal = obj.field1; // Postfix member access (.)
+    let ptrObj: MyClass<int>@;
+    // memberVal = ptrObj@field1; // Postfix member access (@)
+
+    let arrLit: int[] = [1, 2, 3]; // Array Literal
+    let arrVal = arrLit[1];     // Postfix index access
+
+    simpleFunc(a);             // Postfix function call
+    // complexFunction<int, string>(a, "hello", b); // Postfix generic function call
+
+    let newObj = new MyClass<int>(42); // new Expression
+    
+    let thisVal = this; // this Expression (only valid inside class methods)
+
+    #const let compileTimeVal = 10 * 2; // CompileTimeExpr #const
+    #sizeof<int>; // CompileTimeExpr #sizeof
+    #alignof<MyClass<int>>; // CompileTimeExpr #alignof
+    #typeof(a); // CompileTimeExpr #typeof
+
+    let numLiteral = 123;
+    let hexLiteral = 0xFF;
+    let binLiteral = 0b101;
+    let floatLiteral = 1.23e4;
+    let strLiteral = "hello \"world\"";
+    let charLiteral = 'a';
+    let boolLiteral = true;
+    let nullLiteral = null;
+    let undefLiteral = undefined;
+}
+
+// --- 7. Special Operators and Symbols ---
+// Assignment operators (=, +=, -=, *=, /=, %=, <<=, >>=, &=, ^=, |=) shown in Expressions
+// TypeList (Type, Type, ...) shown in function/class declarations
+// IDENTIFIER, NUMBER, STRING, CharacterLiteral shown in Literals

@@ -1,0 +1,108 @@
+// Simple class with no generic parameters
+#aligned class SimpleClass {
+    // Field declarations
+    private let count: int = 0;
+    public const MAX_SIZE: int = 100;
+
+    // Constructor
+    constructor() {
+        this.count = 0;
+    }
+
+    // Method
+    public function increment(): int {
+        this.count = this.count + 1;
+        return this.count;
+    }
+
+    // Property getter
+    public get currentCount: int {
+        return this.count;
+    }
+
+    // Property setter
+    public set maxSize(value: int) {
+        if (value > 0) {
+            this.MAX_SIZE = value;
+        }
+    }
+}
+
+// Generic class with type constraint
+class Container<T extends Comparable> {
+    private let items: T[] = [];
+
+    public function add(item: T): void {
+        this.items.push(item);
+    }
+
+    public function getAt(index: int): T {
+        return this.items[index];
+    }
+}
+
+// Class with inheritance and multiple interfaces
+class DataProcessor extends BaseProcessor implements Serializable, Observable {
+    #inline public function process(): void {
+        // Implementation
+    }
+
+    public function serialize(): string {
+        return "serialized data";
+    }
+
+    public function subscribe(observer: Observer): void {
+        // Implementation
+    }
+}
+
+// Class with multiple generic parameters and different constraints
+class KeyValueStore<K extends Hashable, V> {
+    private let data: Entry<K, V>[] = [];
+
+    public function set_(key: K, value: V): void {
+        // Implementation
+    }
+
+    public function get_(key: K): V {
+        // Implementation
+        return this.data[0].value;
+    }
+
+    // Nested class
+    private class Entry<KeyType, ValueType> {
+        public let key: KeyType;
+        public let value: ValueType;
+
+        public constructor(key: KeyType, value: ValueType) {
+            this.key = key;
+            this.value = value;
+        }
+    }
+}
+
+// Class with attributes and smart pointers
+#packed class ResourceManager {
+    private let resource: #shared<Resource>;
+
+    public function getResource(): #shared<Resource> {
+        return this.resource;
+    }
+
+    #unsafe public function getRawPointer(): Resource@ {
+        return *this.resource;
+    }
+}
+
+// Abstract class with virtual methods
+#abstract class Shape {
+    public let color: string = "white";
+
+    #virtual public function calculateArea(): float {
+        return 0.0;
+    }
+
+    public function setColor(color: string): void {
+        this.color = color;
+    }
+}

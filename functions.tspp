@@ -1,0 +1,58 @@
+/* Sample TSPP File: Function Declarations */
+
+/* 1. Basic function with no parameters */
+function foo() : int {
+  let a:int = 534;
+  return a;
+}
+
+/* 2. Function with parameters */
+function add(a: int, b: int) : int {
+  return a + b;
+}
+
+/* 3. Function with a default parameter value */
+function greet(name: string = "World") : void {
+  // Imagine this prints a greeting.
+  // e.g., print("Hello, " + name);
+}
+
+/* 4. Function with a parameter modifier (by reference) */
+function update(ref value: int) : void {
+  value = value + 1;
+}
+
+/* 5. Generic function with a where clause */
+/* Returns the maximum of two comparable values */
+function max<T>(a: T, b: T) : T where T: comparable {
+  // if (a > b) {
+  //   return a;
+  // } else {
+  //   return b;
+  // }
+}
+
+/* 6. Function with a throws clause */
+function risky() : void throws Error {
+  // throw new Error("Operation failed");
+}
+
+/* 7. Function with multiple modifiers */
+#inline #virtual function optimizedFunction(x: int, y: int) : int {
+  return x * y;
+}
+
+/* 8. Generic function with throws and where clause */
+function processData<T>(data: T[]) : T where T: comparable throws DataError {
+  // Process the data and return the first element.
+  return data[0];
+}
+
+/* 9. Empty function */
+function empty() : void {
+}
+
+/* 10. Generic identity function */
+function identity<T>(x: T) : T where T: comparable {
+  return x;
+}

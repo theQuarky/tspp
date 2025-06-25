@@ -1,0 +1,33 @@
+// Example file with various TSPP linting issues
+
+let counter = 0          // Missing type and semicolon
+
+// Inconsistent indentation
+function badFunction(x, y) {
+  let total = x + y;     // Missing type and incorrect indent
+    return total         // Missing semicolon and return type
+}
+
+// Unmatched braces
+class BadClass {
+  constructor() {
+    // Missing closing brace
+
+// Memory issues
+let largeArray = new Array(1000);  // Missing memory placement attribute
+
+// Raw pointer without unsafe
+function unsafePointer() {
+    let ptr: int@ = null;   // Raw pointer outside unsafe block
+    ptr[0] = 42;            // Unsafe access
+}
+
+// Missing type annotation
+const MAX_VALUE = 100;
+
+// Line that's too long
+let reallyLongLine = "This is a very long line that exceeds the maximum recommended line length and will trigger a linting warning because it's hard to read";
+
+// Unmatched parentheses
+function unbalancedParens( {
+    return 42;

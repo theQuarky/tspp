@@ -1,0 +1,82 @@
+// Example of a well-written TSPP file that passes all linter checks
+
+#stack let counter: int = 0;
+#heap let buffer: int[1024] = [];
+const MAX_SIZE: int = 100;
+
+/**
+ * A class that demonstrates good TSPP practices
+ */
+#aligned(64)
+class DataProcessor {
+    private data: float[16];
+    
+    public constructor(initialValue: float) {
+        for (let i: int = 0; i < 16; i++) {
+            this.data[i] = initialValue;
+        }
+    }
+    
+    public process(): float {
+        let sum: float = 0;
+        
+        for (let i: int = 0; i < 16; i++) {
+            sum += this.data[i];
+        }
+        
+        return sum / 16.0;
+    }
+    
+    #simd
+    public multiplyByScalar(scalar: float): void {
+        for (let i: int = 0; i < 16; i++) {
+            this.data[i] *= scalar;
+        }
+    }
+}
+
+/**
+ * Safe pointer usage with proper memory management
+ */
+function safeArrayAccess(arr: int[], index: int): int {
+    if (index < 0 || index >= arr.length) {
+        return -1; // Safe default
+    }
+    return arr[index];
+}
+
+/**
+ * Using smart pointers for safe memory management
+ */
+function createProcessor(): #shared<DataProcessor> {
+    return new DataProcessor(1.0);
+}
+
+/**
+ * Example of unsafe code properly contained
+ */
+#unsafe
+function memcpy(src: int@, dest: int@, size: int): void {
+    for (let i: int = 0; i < size; i++) {
+        dest[i] = src[i];
+    }
+}
+
+/**
+ * Main function that uses other components
+ */
+function main(): void {
+    #stack let processor: DataProcessor = new DataProcessor(1.5);
+    processor.multiplyByScalar(2.0);
+    let result: float = processor.process();
+    
+    #stack let localArray: int[10] = [];
+    for (let i: int = 0; i < 10; i++) {
+        localArray[i] = i * 2;
+    }
+    
+    let safeValue: int = safeArrayAccess(localArray, 5);
+    
+    // Using a shared pointer for automatic cleanup
+    let shared_processor: #shared<DataProcessor> = createProcessor();
+}

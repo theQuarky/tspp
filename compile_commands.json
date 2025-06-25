@@ -1,0 +1,194 @@
+[
+{
+  "directory": "/home/hiren/build-your-own-x/ts++/build/src",
+  "command": "/usr/bin/c++  -I/home/hiren/build-your-own-x/ts++/src  -fsanitize=address -fno-omit-frame-pointer -g -std=gnu++17   -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -Wall -Wextra -Wpedantic -o CMakeFiles/tokens.dir/tokens/stream/token_stream.cpp.o -c /home/hiren/build-your-own-x/ts++/src/tokens/stream/token_stream.cpp",
+  "file": "/home/hiren/build-your-own-x/ts++/src/tokens/stream/token_stream.cpp",
+  "output": "src/CMakeFiles/tokens.dir/tokens/stream/token_stream.cpp.o"
+},
+{
+  "directory": "/home/hiren/build-your-own-x/ts++/build/src",
+  "command": "/usr/bin/c++  -I/home/hiren/build-your-own-x/ts++/src  -fsanitize=address -fno-omit-frame-pointer -g -std=gnu++17   -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -Wall -Wextra -Wpedantic -o CMakeFiles/core.dir/core/diagnostics/error_reporter.cpp.o -c /home/hiren/build-your-own-x/ts++/src/core/diagnostics/error_reporter.cpp",
+  "file": "/home/hiren/build-your-own-x/ts++/src/core/diagnostics/error_reporter.cpp",
+  "output": "src/CMakeFiles/core.dir/core/diagnostics/error_reporter.cpp.o"
+},
+{
+  "directory": "/home/hiren/build-your-own-x/ts++/build/src",
+  "command": "/usr/bin/c++  -I/home/hiren/build-your-own-x/ts++/src  -fsanitize=address -fno-omit-frame-pointer -g -std=gnu++17   -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -Wall -Wextra -Wpedantic -o CMakeFiles/core.dir/core/utils/file_utils.cpp.o -c /home/hiren/build-your-own-x/ts++/src/core/utils/file_utils.cpp",
+  "file": "/home/hiren/build-your-own-x/ts++/src/core/utils/file_utils.cpp",
+  "output": "src/CMakeFiles/core.dir/core/utils/file_utils.cpp.o"
+},
+{
+  "directory": "/home/hiren/build-your-own-x/ts++/build/src",
+  "command": "/usr/bin/c++  -I/home/hiren/build-your-own-x/ts++/src  -fsanitize=address -fno-omit-frame-pointer -g -std=gnu++17   -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -Wall -Wextra -Wpedantic -o CMakeFiles/core.dir/core/utils/log_utils.cpp.o -c /home/hiren/build-your-own-x/ts++/src/core/utils/log_utils.cpp",
+  "file": "/home/hiren/build-your-own-x/ts++/src/core/utils/log_utils.cpp",
+  "output": "src/CMakeFiles/core.dir/core/utils/log_utils.cpp.o"
+},
+{
+  "directory": "/home/hiren/build-your-own-x/ts++/build/src",
+  "command": "/usr/bin/c++  -I/home/hiren/build-your-own-x/ts++/src  -fsanitize=address -fno-omit-frame-pointer -g -std=gnu++17   -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -Wall -Wextra -Wpedantic -o CMakeFiles/core.dir/core/utils/string_utils.cpp.o -c /home/hiren/build-your-own-x/ts++/src/core/utils/string_utils.cpp",
+  "file": "/home/hiren/build-your-own-x/ts++/src/core/utils/string_utils.cpp",
+  "output": "src/CMakeFiles/core.dir/core/utils/string_utils.cpp.o"
+},
+{
+  "directory": "/home/hiren/build-your-own-x/ts++/build/src",
+  "command": "/usr/bin/c++  -I/home/hiren/build-your-own-x/ts++/src  -fsanitize=address -fno-omit-frame-pointer -g -std=gnu++17   -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -Wall -Wextra -Wpedantic -o CMakeFiles/lexer.dir/lexer/lexer.cpp.o -c /home/hiren/build-your-own-x/ts++/src/lexer/lexer.cpp",
+  "file": "/home/hiren/build-your-own-x/ts++/src/lexer/lexer.cpp",
+  "output": "src/CMakeFiles/lexer.dir/lexer/lexer.cpp.o"
+},
+{
+  "directory": "/home/hiren/build-your-own-x/ts++/build/src",
+  "command": "/usr/bin/c++  -I/home/hiren/build-your-own-x/ts++/src  -fsanitize=address -fno-omit-frame-pointer -g -std=gnu++17   -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -Wall -Wextra -Wpedantic -o CMakeFiles/lexer.dir/lexer/scanner/base/scanner_base.cpp.o -c /home/hiren/build-your-own-x/ts++/src/lexer/scanner/base/scanner_base.cpp",
+  "file": "/home/hiren/build-your-own-x/ts++/src/lexer/scanner/base/scanner_base.cpp",
+  "output": "src/CMakeFiles/lexer.dir/lexer/scanner/base/scanner_base.cpp.o"
+},
+{
+  "directory": "/home/hiren/build-your-own-x/ts++/build/src",
+  "command": "/usr/bin/c++  -I/home/hiren/build-your-own-x/ts++/src  -fsanitize=address -fno-omit-frame-pointer -g -std=gnu++17   -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -Wall -Wextra -Wpedantic -o CMakeFiles/lexer.dir/lexer/scanner/specialized/identifier_scanner.cpp.o -c /home/hiren/build-your-own-x/ts++/src/lexer/scanner/specialized/identifier_scanner.cpp",
+  "file": "/home/hiren/build-your-own-x/ts++/src/lexer/scanner/specialized/identifier_scanner.cpp",
+  "output": "src/CMakeFiles/lexer.dir/lexer/scanner/specialized/identifier_scanner.cpp.o"
+},
+{
+  "directory": "/home/hiren/build-your-own-x/ts++/build/src",
+  "command": "/usr/bin/c++  -I/home/hiren/build-your-own-x/ts++/src  -fsanitize=address -fno-omit-frame-pointer -g -std=gnu++17   -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -Wall -Wextra -Wpedantic -o CMakeFiles/lexer.dir/lexer/scanner/specialized/number_scanner.cpp.o -c /home/hiren/build-your-own-x/ts++/src/lexer/scanner/specialized/number_scanner.cpp",
+  "file": "/home/hiren/build-your-own-x/ts++/src/lexer/scanner/specialized/number_scanner.cpp",
+  "output": "src/CMakeFiles/lexer.dir/lexer/scanner/specialized/number_scanner.cpp.o"
+},
+{
+  "directory": "/home/hiren/build-your-own-x/ts++/build/src",
+  "command": "/usr/bin/c++  -I/home/hiren/build-your-own-x/ts++/src  -fsanitize=address -fno-omit-frame-pointer -g -std=gnu++17   -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -Wall -Wextra -Wpedantic -o CMakeFiles/lexer.dir/lexer/scanner/specialized/operator_scanner.cpp.o -c /home/hiren/build-your-own-x/ts++/src/lexer/scanner/specialized/operator_scanner.cpp",
+  "file": "/home/hiren/build-your-own-x/ts++/src/lexer/scanner/specialized/operator_scanner.cpp",
+  "output": "src/CMakeFiles/lexer.dir/lexer/scanner/specialized/operator_scanner.cpp.o"
+},
+{
+  "directory": "/home/hiren/build-your-own-x/ts++/build/src",
+  "command": "/usr/bin/c++  -I/home/hiren/build-your-own-x/ts++/src  -fsanitize=address -fno-omit-frame-pointer -g -std=gnu++17   -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -Wall -Wextra -Wpedantic -o CMakeFiles/lexer.dir/lexer/scanner/specialized/string_scanner.cpp.o -c /home/hiren/build-your-own-x/ts++/src/lexer/scanner/specialized/string_scanner.cpp",
+  "file": "/home/hiren/build-your-own-x/ts++/src/lexer/scanner/specialized/string_scanner.cpp",
+  "output": "src/CMakeFiles/lexer.dir/lexer/scanner/specialized/string_scanner.cpp.o"
+},
+{
+  "directory": "/home/hiren/build-your-own-x/ts++/build/src",
+  "command": "/usr/bin/c++  -I/home/hiren/build-your-own-x/ts++/src  -fsanitize=address -fno-omit-frame-pointer -g -std=gnu++17   -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -Wall -Wextra -Wpedantic -o CMakeFiles/lexer.dir/lexer/scanner/token_scanner.cpp.o -c /home/hiren/build-your-own-x/ts++/src/lexer/scanner/token_scanner.cpp",
+  "file": "/home/hiren/build-your-own-x/ts++/src/lexer/scanner/token_scanner.cpp",
+  "output": "src/CMakeFiles/lexer.dir/lexer/scanner/token_scanner.cpp.o"
+},
+{
+  "directory": "/home/hiren/build-your-own-x/ts++/build/src",
+  "command": "/usr/bin/c++  -I/home/hiren/build-your-own-x/ts++/src  -fsanitize=address -fno-omit-frame-pointer -g -std=gnu++17   -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -Wall -Wextra -Wpedantic -o CMakeFiles/lexer.dir/lexer/state/lexer_state.cpp.o -c /home/hiren/build-your-own-x/ts++/src/lexer/state/lexer_state.cpp",
+  "file": "/home/hiren/build-your-own-x/ts++/src/lexer/state/lexer_state.cpp",
+  "output": "src/CMakeFiles/lexer.dir/lexer/state/lexer_state.cpp.o"
+},
+{
+  "directory": "/home/hiren/build-your-own-x/ts++/build/src",
+  "command": "/usr/bin/c++  -I/home/hiren/build-your-own-x/ts++/src  -fsanitize=address -fno-omit-frame-pointer -g -std=gnu++17   -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -Wall -Wextra -Wpedantic -o CMakeFiles/parser.dir/parser/parser.cpp.o -c /home/hiren/build-your-own-x/ts++/src/parser/parser.cpp",
+  "file": "/home/hiren/build-your-own-x/ts++/src/parser/parser.cpp",
+  "output": "src/CMakeFiles/parser.dir/parser/parser.cpp.o"
+},
+{
+  "directory": "/home/hiren/build-your-own-x/ts++/build/src",
+  "command": "/usr/bin/c++  -I/home/hiren/build-your-own-x/ts++/src  -fsanitize=address -fno-omit-frame-pointer -g -std=gnu++17   -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -Wall -Wextra -Wpedantic -o CMakeFiles/parser.dir/parser/visitors/parse_visitor/base/base_parse_visitor.cpp.o -c /home/hiren/build-your-own-x/ts++/src/parser/visitors/parse_visitor/base/base_parse_visitor.cpp",
+  "file": "/home/hiren/build-your-own-x/ts++/src/parser/visitors/parse_visitor/base/base_parse_visitor.cpp",
+  "output": "src/CMakeFiles/parser.dir/parser/visitors/parse_visitor/base/base_parse_visitor.cpp.o"
+},
+{
+  "directory": "/home/hiren/build-your-own-x/ts++/build/src",
+  "command": "/usr/bin/c++  -I/home/hiren/build-your-own-x/ts++/src  -fsanitize=address -fno-omit-frame-pointer -g -std=gnu++17   -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -Wall -Wextra -Wpedantic -o CMakeFiles/parser.dir/parser/visitors/parse_visitor/expression/expression_parse_visitor.cpp.o -c /home/hiren/build-your-own-x/ts++/src/parser/visitors/parse_visitor/expression/expression_parse_visitor.cpp",
+  "file": "/home/hiren/build-your-own-x/ts++/src/parser/visitors/parse_visitor/expression/expression_parse_visitor.cpp",
+  "output": "src/CMakeFiles/parser.dir/parser/visitors/parse_visitor/expression/expression_parse_visitor.cpp.o"
+},
+{
+  "directory": "/home/hiren/build-your-own-x/ts++/build/src",
+  "command": "/usr/bin/c++  -I/home/hiren/build-your-own-x/ts++/src  -fsanitize=address -fno-omit-frame-pointer -g -std=gnu++17   -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -Wall -Wextra -Wpedantic -o CMakeFiles/parser.dir/parser/visitors/parse_visitor/declaration/declaration_parse_visitor.cpp.o -c /home/hiren/build-your-own-x/ts++/src/parser/visitors/parse_visitor/declaration/declaration_parse_visitor.cpp",
+  "file": "/home/hiren/build-your-own-x/ts++/src/parser/visitors/parse_visitor/declaration/declaration_parse_visitor.cpp",
+  "output": "src/CMakeFiles/parser.dir/parser/visitors/parse_visitor/declaration/declaration_parse_visitor.cpp.o"
+},
+{
+  "directory": "/home/hiren/build-your-own-x/ts++/build/src",
+  "command": "/usr/bin/c++  -I/home/hiren/build-your-own-x/ts++/src  -fsanitize=address -fno-omit-frame-pointer -g -std=gnu++17   -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -Wall -Wextra -Wpedantic -o CMakeFiles/parser.dir/parser/visitors/parse_visitor/statement/statement_parse_visitor.cpp.o -c /home/hiren/build-your-own-x/ts++/src/parser/visitors/parse_visitor/statement/statement_parse_visitor.cpp",
+  "file": "/home/hiren/build-your-own-x/ts++/src/parser/visitors/parse_visitor/statement/statement_parse_visitor.cpp",
+  "output": "src/CMakeFiles/parser.dir/parser/visitors/parse_visitor/statement/statement_parse_visitor.cpp.o"
+},
+{
+  "directory": "/home/hiren/build-your-own-x/ts++/build/src",
+  "command": "/usr/bin/c++  -I/home/hiren/build-your-own-x/ts++/src  -fsanitize=address -fno-omit-frame-pointer -g -std=gnu++17   -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -Wall -Wextra -Wpedantic -o CMakeFiles/parser.dir/parser/visitors/type_check_visitor/resolved_type.cpp.o -c /home/hiren/build-your-own-x/ts++/src/parser/visitors/type_check_visitor/resolved_type.cpp",
+  "file": "/home/hiren/build-your-own-x/ts++/src/parser/visitors/type_check_visitor/resolved_type.cpp",
+  "output": "src/CMakeFiles/parser.dir/parser/visitors/type_check_visitor/resolved_type.cpp.o"
+},
+{
+  "directory": "/home/hiren/build-your-own-x/ts++/build/src",
+  "command": "/usr/bin/c++  -I/home/hiren/build-your-own-x/ts++/src  -fsanitize=address -fno-omit-frame-pointer -g -std=gnu++17   -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -Wall -Wextra -Wpedantic -o CMakeFiles/parser.dir/parser/visitors/type_check_visitor/type_check_visitor.cpp.o -c /home/hiren/build-your-own-x/ts++/src/parser/visitors/type_check_visitor/type_check_visitor.cpp",
+  "file": "/home/hiren/build-your-own-x/ts++/src/parser/visitors/type_check_visitor/type_check_visitor.cpp",
+  "output": "src/CMakeFiles/parser.dir/parser/visitors/type_check_visitor/type_check_visitor.cpp.o"
+},
+{
+  "directory": "/home/hiren/build-your-own-x/ts++/build/src",
+  "command": "/usr/bin/c++  -I/home/hiren/build-your-own-x/ts++/src  -fsanitize=address -fno-omit-frame-pointer -g -std=gnu++17   -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -Wall -Wextra -Wpedantic -o CMakeFiles/parser.dir/parser/visitors/type_check_visitor/type_scope.cpp.o -c /home/hiren/build-your-own-x/ts++/src/parser/visitors/type_check_visitor/type_scope.cpp",
+  "file": "/home/hiren/build-your-own-x/ts++/src/parser/visitors/type_check_visitor/type_scope.cpp",
+  "output": "src/CMakeFiles/parser.dir/parser/visitors/type_check_visitor/type_scope.cpp.o"
+},
+{
+  "directory": "/home/hiren/build-your-own-x/ts++/build/src",
+  "command": "/usr/bin/c++  -I/home/hiren/build-your-own-x/ts++/src  -fsanitize=address -fno-omit-frame-pointer -g -std=gnu++17   -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -Wall -Wextra -Wpedantic -o CMakeFiles/codegen.dir/codegen/codegen_errors.cpp.o -c /home/hiren/build-your-own-x/ts++/src/codegen/codegen_errors.cpp",
+  "file": "/home/hiren/build-your-own-x/ts++/src/codegen/codegen_errors.cpp",
+  "output": "src/CMakeFiles/codegen.dir/codegen/codegen_errors.cpp.o"
+},
+{
+  "directory": "/home/hiren/build-your-own-x/ts++/build/src",
+  "command": "/usr/bin/c++  -I/home/hiren/build-your-own-x/ts++/src  -fsanitize=address -fno-omit-frame-pointer -g -std=gnu++17   -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -Wall -Wextra -Wpedantic -o CMakeFiles/codegen.dir/codegen/codegen_options.cpp.o -c /home/hiren/build-your-own-x/ts++/src/codegen/codegen_options.cpp",
+  "file": "/home/hiren/build-your-own-x/ts++/src/codegen/codegen_options.cpp",
+  "output": "src/CMakeFiles/codegen.dir/codegen/codegen_options.cpp.o"
+},
+{
+  "directory": "/home/hiren/build-your-own-x/ts++/build/src",
+  "command": "/usr/bin/c++  -I/home/hiren/build-your-own-x/ts++/src  -fsanitize=address -fno-omit-frame-pointer -g -std=gnu++17   -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -Wall -Wextra -Wpedantic -o CMakeFiles/codegen.dir/codegen/llvm/llvm_context.cpp.o -c /home/hiren/build-your-own-x/ts++/src/codegen/llvm/llvm_context.cpp",
+  "file": "/home/hiren/build-your-own-x/ts++/src/codegen/llvm/llvm_context.cpp",
+  "output": "src/CMakeFiles/codegen.dir/codegen/llvm/llvm_context.cpp.o"
+},
+{
+  "directory": "/home/hiren/build-your-own-x/ts++/build/src",
+  "command": "/usr/bin/c++  -I/home/hiren/build-your-own-x/ts++/src  -fsanitize=address -fno-omit-frame-pointer -g -std=gnu++17   -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -Wall -Wextra -Wpedantic -o CMakeFiles/codegen.dir/codegen/llvm/llvm_type_builder.cpp.o -c /home/hiren/build-your-own-x/ts++/src/codegen/llvm/llvm_type_builder.cpp",
+  "file": "/home/hiren/build-your-own-x/ts++/src/codegen/llvm/llvm_type_builder.cpp",
+  "output": "src/CMakeFiles/codegen.dir/codegen/llvm/llvm_type_builder.cpp.o"
+},
+{
+  "directory": "/home/hiren/build-your-own-x/ts++/build/src",
+  "command": "/usr/bin/c++  -I/home/hiren/build-your-own-x/ts++/src  -fsanitize=address -fno-omit-frame-pointer -g -std=gnu++17   -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -Wall -Wextra -Wpedantic -o CMakeFiles/codegen.dir/codegen/llvm/llvm_code_gen.cpp.o -c /home/hiren/build-your-own-x/ts++/src/codegen/llvm/llvm_code_gen.cpp",
+  "file": "/home/hiren/build-your-own-x/ts++/src/codegen/llvm/llvm_code_gen.cpp",
+  "output": "src/CMakeFiles/codegen.dir/codegen/llvm/llvm_code_gen.cpp.o"
+},
+{
+  "directory": "/home/hiren/build-your-own-x/ts++/build/src",
+  "command": "/usr/bin/c++  -I/home/hiren/build-your-own-x/ts++/src  -fsanitize=address -fno-omit-frame-pointer -g -std=gnu++17   -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -Wall -Wextra -Wpedantic -o CMakeFiles/codegen.dir/codegen/llvm/llvm_value.cpp.o -c /home/hiren/build-your-own-x/ts++/src/codegen/llvm/llvm_value.cpp",
+  "file": "/home/hiren/build-your-own-x/ts++/src/codegen/llvm/llvm_value.cpp",
+  "output": "src/CMakeFiles/codegen.dir/codegen/llvm/llvm_value.cpp.o"
+},
+{
+  "directory": "/home/hiren/build-your-own-x/ts++/build/src",
+  "command": "/usr/bin/c++  -I/home/hiren/build-your-own-x/ts++/src  -fsanitize=address -fno-omit-frame-pointer -g -std=gnu++17   -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -Wall -Wextra -Wpedantic -o CMakeFiles/codegen.dir/codegen/llvm/llvm_function.cpp.o -c /home/hiren/build-your-own-x/ts++/src/codegen/llvm/llvm_function.cpp",
+  "file": "/home/hiren/build-your-own-x/ts++/src/codegen/llvm/llvm_function.cpp",
+  "output": "src/CMakeFiles/codegen.dir/codegen/llvm/llvm_function.cpp.o"
+},
+{
+  "directory": "/home/hiren/build-your-own-x/ts++/build/src",
+  "command": "/usr/bin/c++  -I/home/hiren/build-your-own-x/ts++/src  -fsanitize=address -fno-omit-frame-pointer -g -std=gnu++17   -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -Wall -Wextra -Wpedantic -o CMakeFiles/codegen.dir/codegen/llvm/llvm_utils.cpp.o -c /home/hiren/build-your-own-x/ts++/src/codegen/llvm/llvm_utils.cpp",
+  "file": "/home/hiren/build-your-own-x/ts++/src/codegen/llvm/llvm_utils.cpp",
+  "output": "src/CMakeFiles/codegen.dir/codegen/llvm/llvm_utils.cpp.o"
+},
+{
+  "directory": "/home/hiren/build-your-own-x/ts++/build/src",
+  "command": "/usr/bin/c++  -I/home/hiren/build-your-own-x/ts++/src  -fsanitize=address -fno-omit-frame-pointer -g -std=gnu++17   -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -Wall -Wextra -Wpedantic -o CMakeFiles/codegen.dir/codegen/llvm/llvm_optimizer.cpp.o -c /home/hiren/build-your-own-x/ts++/src/codegen/llvm/llvm_optimizer.cpp",
+  "file": "/home/hiren/build-your-own-x/ts++/src/codegen/llvm/llvm_optimizer.cpp",
+  "output": "src/CMakeFiles/codegen.dir/codegen/llvm/llvm_optimizer.cpp.o"
+},
+{
+  "directory": "/home/hiren/build-your-own-x/ts++/build/src",
+  "command": "/usr/bin/c++  -I/home/hiren/build-your-own-x/ts++/src  -fsanitize=address -fno-omit-frame-pointer -g -std=gnu++17   -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -Wall -Wextra -Wpedantic -o CMakeFiles/repl.dir/repl/repl.cpp.o -c /home/hiren/build-your-own-x/ts++/src/repl/repl.cpp",
+  "file": "/home/hiren/build-your-own-x/ts++/src/repl/repl.cpp",
+  "output": "src/CMakeFiles/repl.dir/repl/repl.cpp.o"
+},
+{
+  "directory": "/home/hiren/build-your-own-x/ts++/build/src",
+  "command": "/usr/bin/c++  -I/home/hiren/build-your-own-x/ts++/src  -fsanitize=address -fno-omit-frame-pointer -g -std=gnu++17   -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -Wall -Wextra -Wpedantic -o CMakeFiles/tspp.dir/main.cpp.o -c /home/hiren/build-your-own-x/ts++/src/main.cpp",
+  "file": "/home/hiren/build-your-own-x/ts++/src/main.cpp",
+  "output": "src/CMakeFiles/tspp.dir/main.cpp.o"
+}
+]
