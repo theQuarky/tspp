@@ -1,13 +1,14 @@
 #include "type_check_visitor.h"
+
+#include <iostream>
+
 #include "parser/nodes/expression_nodes.h"
 #include "tokens/token_type.h"
-#include <iostream>
 
 namespace visitors {
 
 TypeCheckVisitor::TypeCheckVisitor(core::ErrorReporter &errorReporter)
     : errorReporter_(errorReporter), inLoop_(false), inTryBlock_(false) {
-
   // Initialize built-in types
   voidType_ = std::make_shared<ResolvedType>(ResolvedType::Void());
   intType_ = std::make_shared<ResolvedType>(ResolvedType::Int());
@@ -101,8 +102,8 @@ bool TypeCheckVisitor::checkAST(const parser::AST &ast) {
 }
 
 // Declaration visitors
-std::shared_ptr<ResolvedType>
-TypeCheckVisitor::visitVarDecl(const nodes::VarDeclNode *node) {
+std::shared_ptr<ResolvedType> TypeCheckVisitor::visitVarDecl(
+    const nodes::VarDeclNode *node) {
   // Check the initializer if present
   std::shared_ptr<ResolvedType> initType = nullptr;
   if (node->getInitializer()) {
@@ -133,8 +134,9 @@ TypeCheckVisitor::visitVarDecl(const nodes::VarDeclNode *node) {
     // Type inference from initializer
     varType = initType;
   } else {
-    error(node->getLocation(), "Variable declaration needs either a type or an "
-                               "initializer for type inference");
+    error(node->getLocation(),
+          "Variable declaration needs either a type or an "
+          "initializer for type inference");
     return errorType_;
   }
 
@@ -143,8 +145,8 @@ TypeCheckVisitor::visitVarDecl(const nodes::VarDeclNode *node) {
   return varType;
 }
 
-std::shared_ptr<ResolvedType>
-TypeCheckVisitor::visitFuncDecl(const nodes::FunctionDeclNode *node) {
+std::shared_ptr<ResolvedType> TypeCheckVisitor::visitFuncDecl(
+    const nodes::FunctionDeclNode *node) {
   // Process return type
   std::shared_ptr<ResolvedType> returnType;
   if (node->getReturnType()) {
@@ -191,8 +193,8 @@ std::shared_ptr<ResolvedType> TypeCheckVisitor::visitGenericFuncDecl(
   return visitFuncDecl(node);
 }
 
-std::shared_ptr<ResolvedType>
-TypeCheckVisitor::visitClassDecl(const nodes::ClassDeclNode *node) {
+std::shared_ptr<ResolvedType> TypeCheckVisitor::visitClassDecl(
+    const nodes::ClassDeclNode *node) {
   auto classType =
       std::make_shared<ResolvedType>(ResolvedType::Named(node->getName()));
 
@@ -239,8 +241,8 @@ std::shared_ptr<ResolvedType> TypeCheckVisitor::visitGenericClassDecl(
   return visitClassDecl(node);
 }
 
-std::shared_ptr<ResolvedType>
-TypeCheckVisitor::visitConstructorDecl(const nodes::ConstructorDeclNode *node) {
+std::shared_ptr<ResolvedType> TypeCheckVisitor::visitConstructorDecl(
+    const nodes::ConstructorDeclNode *node) {
   // Process parameters
   std::vector<std::shared_ptr<ResolvedType>> paramTypes;
   for (const auto &param : node->getParameters()) {
@@ -269,8 +271,8 @@ TypeCheckVisitor::visitConstructorDecl(const nodes::ConstructorDeclNode *node) {
   return constructorType;
 }
 
-std::shared_ptr<ResolvedType>
-TypeCheckVisitor::visitMethodDecl(const nodes::MethodDeclNode *node) {
+std::shared_ptr<ResolvedType> TypeCheckVisitor::visitMethodDecl(
+    const nodes::MethodDeclNode *node) {
   // Process return type
   std::shared_ptr<ResolvedType> returnType;
   if (node->getReturnType()) {
@@ -306,8 +308,8 @@ TypeCheckVisitor::visitMethodDecl(const nodes::MethodDeclNode *node) {
   return methodType;
 }
 
-std::shared_ptr<ResolvedType>
-TypeCheckVisitor::visitFieldDecl(const nodes::FieldDeclNode *node) {
+std::shared_ptr<ResolvedType> TypeCheckVisitor::visitFieldDecl(
+    const nodes::FieldDeclNode *node) {
   // Get field type
   std::shared_ptr<ResolvedType> fieldType;
   if (node->getType()) {
@@ -333,8 +335,8 @@ TypeCheckVisitor::visitFieldDecl(const nodes::FieldDeclNode *node) {
   return fieldType;
 }
 
-std::shared_ptr<ResolvedType>
-TypeCheckVisitor::visitPropertyDecl(const nodes::PropertyDeclNode *node) {
+std::shared_ptr<ResolvedType> TypeCheckVisitor::visitPropertyDecl(
+    const nodes::PropertyDeclNode *node) {
   // Get property type
   auto propertyType = visitType(node->getPropertyType().get());
 
@@ -348,13 +350,13 @@ TypeCheckVisitor::visitPropertyDecl(const nodes::PropertyDeclNode *node) {
   return propertyType;
 }
 
-std::shared_ptr<ResolvedType>
-TypeCheckVisitor::visitEnumDecl(const nodes::EnumDeclNode *node) {
+std::shared_ptr<ResolvedType> TypeCheckVisitor::visitEnumDecl(
+    const nodes::EnumDeclNode *node) {
   auto enumType =
       std::make_shared<ResolvedType>(ResolvedType::Named(node->getName()));
 
   // Check underlying type if present
-  std::shared_ptr<ResolvedType> underlyingType = intType_; // Default to int
+  std::shared_ptr<ResolvedType> underlyingType = intType_;  // Default to int
   if (node->getUnderlyingType()) {
     underlyingType = visitType(node->getUnderlyingType().get());
   }
@@ -367,8 +369,8 @@ TypeCheckVisitor::visitEnumDecl(const nodes::EnumDeclNode *node) {
   return enumType;
 }
 
-std::shared_ptr<ResolvedType>
-TypeCheckVisitor::visitEnumMember(const nodes::EnumMemberNode *node) {
+std::shared_ptr<ResolvedType> TypeCheckVisitor::visitEnumMember(
+    const nodes::EnumMemberNode *node) {
   // Check member value if present
   if (node->getValue()) {
     auto valueType = visitExpr(node->getValue().get());
@@ -378,11 +380,11 @@ TypeCheckVisitor::visitEnumMember(const nodes::EnumMemberNode *node) {
             "Enum member value must be compatible with underlying type");
     }
   }
-  return intType_; // Enum members have integer type
+  return intType_;  // Enum members have integer type
 }
 
-std::shared_ptr<ResolvedType>
-TypeCheckVisitor::visitInterfaceDecl(const nodes::InterfaceDeclNode *node) {
+std::shared_ptr<ResolvedType> TypeCheckVisitor::visitInterfaceDecl(
+    const nodes::InterfaceDeclNode *node) {
   auto interfaceType =
       std::make_shared<ResolvedType>(ResolvedType::Named(node->getName()));
 
@@ -415,8 +417,8 @@ std::shared_ptr<ResolvedType> TypeCheckVisitor::visitGenericInterfaceDecl(
   return visitInterfaceDecl(node);
 }
 
-std::shared_ptr<ResolvedType>
-TypeCheckVisitor::visitMethodSignature(const nodes::MethodSignatureNode *node) {
+std::shared_ptr<ResolvedType> TypeCheckVisitor::visitMethodSignature(
+    const nodes::MethodSignatureNode *node) {
   // Process return type
   auto returnType = visitType(node->getReturnType().get());
 
@@ -436,8 +438,8 @@ std::shared_ptr<ResolvedType> TypeCheckVisitor::visitPropertySignature(
   return visitType(node->getType().get());
 }
 
-std::shared_ptr<ResolvedType>
-TypeCheckVisitor::visitNamespaceDecl(const nodes::NamespaceDeclNode *node) {
+std::shared_ptr<ResolvedType> TypeCheckVisitor::visitNamespaceDecl(
+    const nodes::NamespaceDeclNode *node) {
   enterScope();
 
   // Process all declarations in the namespace
@@ -457,15 +459,15 @@ TypeCheckVisitor::visitNamespaceDecl(const nodes::NamespaceDeclNode *node) {
   return voidType_;
 }
 
-std::shared_ptr<ResolvedType>
-TypeCheckVisitor::visitTypedefDecl(const nodes::TypedefDeclNode *node) {
+std::shared_ptr<ResolvedType> TypeCheckVisitor::visitTypedefDecl(
+    const nodes::TypedefDeclNode *node) {
   auto aliasedType = visitType(node->getAliasedType().get());
   currentScope_->declareType(node->getName(), aliasedType);
   return aliasedType;
 }
 
-std::shared_ptr<ResolvedType>
-TypeCheckVisitor::visitParameter(const nodes::ParameterNode *node) {
+std::shared_ptr<ResolvedType> TypeCheckVisitor::visitParameter(
+    const nodes::ParameterNode *node) {
   auto paramType = visitType(node->getType().get());
 
   // Handle reference parameters
@@ -486,8 +488,8 @@ TypeCheckVisitor::visitParameter(const nodes::ParameterNode *node) {
   return paramType;
 }
 
-std::shared_ptr<ResolvedType>
-TypeCheckVisitor::visitAttribute(const nodes::AttributeNode *node) {
+std::shared_ptr<ResolvedType> TypeCheckVisitor::visitAttribute(
+    const nodes::AttributeNode *node) {
   // Check attribute argument if present
   if (node->getArgument()) {
     visitExpr(node->getArgument().get());
@@ -496,8 +498,8 @@ TypeCheckVisitor::visitAttribute(const nodes::AttributeNode *node) {
 }
 
 // Statement visitors
-std::shared_ptr<ResolvedType>
-TypeCheckVisitor::visitStmt(const nodes::StatementNode *node) {
+std::shared_ptr<ResolvedType> TypeCheckVisitor::visitStmt(
+    const nodes::StatementNode *node) {
   if (auto exprStmt = dynamic_cast<const nodes::ExpressionStmtNode *>(node)) {
     return visitExprStmt(exprStmt);
   } else if (auto blockStmt = dynamic_cast<const nodes::BlockNode *>(node)) {
@@ -572,14 +574,14 @@ TypeCheckVisitor::visitStmt(const nodes::StatementNode *node) {
 //   }
 // }
 
-std::shared_ptr<ResolvedType>
-TypeCheckVisitor::visitExprStmt(const nodes::ExpressionStmtNode *node) {
+std::shared_ptr<ResolvedType> TypeCheckVisitor::visitExprStmt(
+    const nodes::ExpressionStmtNode *node) {
   visitExpr(node->getExpression().get());
   return voidType_;
 }
 
-std::shared_ptr<ResolvedType>
-TypeCheckVisitor::visitBlock(const nodes::BlockNode *node) {
+std::shared_ptr<ResolvedType> TypeCheckVisitor::visitBlock(
+    const nodes::BlockNode *node) {
   enterScope();
 
   for (const auto &stmt : node->getStatements()) {
@@ -590,8 +592,8 @@ TypeCheckVisitor::visitBlock(const nodes::BlockNode *node) {
   return voidType_;
 }
 
-std::shared_ptr<ResolvedType>
-TypeCheckVisitor::visitIfStmt(const nodes::IfStmtNode *node) {
+std::shared_ptr<ResolvedType> TypeCheckVisitor::visitIfStmt(
+    const nodes::IfStmtNode *node) {
   auto condType = visitExpr(node->getCondition().get());
   if (!condType->isImplicitlyConvertibleTo(*boolType_)) {
     error(node->getCondition()->getLocation(),
@@ -607,8 +609,8 @@ TypeCheckVisitor::visitIfStmt(const nodes::IfStmtNode *node) {
   return voidType_;
 }
 
-std::shared_ptr<ResolvedType>
-TypeCheckVisitor::visitWhileStmt(const nodes::WhileStmtNode *node) {
+std::shared_ptr<ResolvedType> TypeCheckVisitor::visitWhileStmt(
+    const nodes::WhileStmtNode *node) {
   auto condType = visitExpr(node->getCondition().get());
   if (!condType->isImplicitlyConvertibleTo(*boolType_)) {
     error(node->getCondition()->getLocation(),
@@ -623,8 +625,8 @@ TypeCheckVisitor::visitWhileStmt(const nodes::WhileStmtNode *node) {
   return voidType_;
 }
 
-std::shared_ptr<ResolvedType>
-TypeCheckVisitor::visitDoWhileStmt(const nodes::DoWhileStmtNode *node) {
+std::shared_ptr<ResolvedType> TypeCheckVisitor::visitDoWhileStmt(
+    const nodes::DoWhileStmtNode *node) {
   bool wasInLoop = inLoop_;
   inLoop_ = true;
   visitStmt(node->getBody().get());
@@ -639,8 +641,8 @@ TypeCheckVisitor::visitDoWhileStmt(const nodes::DoWhileStmtNode *node) {
   return voidType_;
 }
 
-std::shared_ptr<ResolvedType>
-TypeCheckVisitor::visitForStmt(const nodes::ForStmtNode *node) {
+std::shared_ptr<ResolvedType> TypeCheckVisitor::visitForStmt(
+    const nodes::ForStmtNode *node) {
   enterScope();
 
   if (node->getInitializer()) {
@@ -668,8 +670,8 @@ TypeCheckVisitor::visitForStmt(const nodes::ForStmtNode *node) {
   return voidType_;
 }
 
-std::shared_ptr<ResolvedType>
-TypeCheckVisitor::visitForOfStmt(const nodes::ForOfStmtNode *node) {
+std::shared_ptr<ResolvedType> TypeCheckVisitor::visitForOfStmt(
+    const nodes::ForOfStmtNode *node) {
   enterScope();
 
   auto iterableType = visitExpr(node->getIterable().get());
@@ -696,24 +698,24 @@ TypeCheckVisitor::visitForOfStmt(const nodes::ForOfStmtNode *node) {
   return voidType_;
 }
 
-std::shared_ptr<ResolvedType>
-TypeCheckVisitor::visitBreakStmt(const nodes::BreakStmtNode *node) {
+std::shared_ptr<ResolvedType> TypeCheckVisitor::visitBreakStmt(
+    const nodes::BreakStmtNode *node) {
   if (!inLoop_) {
     error(node->getLocation(), "Break statement must be inside a loop");
   }
   return voidType_;
 }
 
-std::shared_ptr<ResolvedType>
-TypeCheckVisitor::visitContinueStmt(const nodes::ContinueStmtNode *node) {
+std::shared_ptr<ResolvedType> TypeCheckVisitor::visitContinueStmt(
+    const nodes::ContinueStmtNode *node) {
   if (!inLoop_) {
     error(node->getLocation(), "Continue statement must be inside a loop");
   }
   return voidType_;
 }
 
-std::shared_ptr<ResolvedType>
-TypeCheckVisitor::visitReturnStmt(const nodes::ReturnStmtNode *node) {
+std::shared_ptr<ResolvedType> TypeCheckVisitor::visitReturnStmt(
+    const nodes::ReturnStmtNode *node) {
   std::shared_ptr<ResolvedType> returnedType = voidType_;
   if (node->getValue()) {
     returnedType = visitExpr(node->getValue().get());
@@ -728,8 +730,8 @@ TypeCheckVisitor::visitReturnStmt(const nodes::ReturnStmtNode *node) {
   return voidType_;
 }
 
-std::shared_ptr<ResolvedType>
-TypeCheckVisitor::visitTryStmt(const nodes::TryStmtNode *node) {
+std::shared_ptr<ResolvedType> TypeCheckVisitor::visitTryStmt(
+    const nodes::TryStmtNode *node) {
   bool wasInTry = inTryBlock_;
   inTryBlock_ = true;
   visitStmt(node->getTryBlock().get());
@@ -759,14 +761,14 @@ TypeCheckVisitor::visitTryStmt(const nodes::TryStmtNode *node) {
   return voidType_;
 }
 
-std::shared_ptr<ResolvedType>
-TypeCheckVisitor::visitThrowStmt(const nodes::ThrowStmtNode *node) {
+std::shared_ptr<ResolvedType> TypeCheckVisitor::visitThrowStmt(
+    const nodes::ThrowStmtNode *node) {
   visitExpr(node->getValue().get());
   return voidType_;
 }
 
-std::shared_ptr<ResolvedType>
-TypeCheckVisitor::visitSwitchStmt(const nodes::SwitchStmtNode *node) {
+std::shared_ptr<ResolvedType> TypeCheckVisitor::visitSwitchStmt(
+    const nodes::SwitchStmtNode *node) {
   auto exprType = visitExpr(node->getExpression().get());
 
   for (const auto &switchCase : node->getCases()) {
@@ -788,8 +790,8 @@ TypeCheckVisitor::visitSwitchStmt(const nodes::SwitchStmtNode *node) {
   return voidType_;
 }
 
-std::shared_ptr<ResolvedType>
-TypeCheckVisitor::visitAssemblyStmt(const nodes::AssemblyStmtNode *node) {
+std::shared_ptr<ResolvedType> TypeCheckVisitor::visitAssemblyStmt(
+    const nodes::AssemblyStmtNode *node) {
   if (node->getCode().empty()) {
     error(node->getLocation(), "Assembly statement cannot have empty code");
     return errorType_;
@@ -799,15 +801,15 @@ TypeCheckVisitor::visitAssemblyStmt(const nodes::AssemblyStmtNode *node) {
   return voidType_;
 }
 
-std::shared_ptr<ResolvedType>
-TypeCheckVisitor::visitLabeledStmt(const nodes::LabeledStatementNode *node) {
+std::shared_ptr<ResolvedType> TypeCheckVisitor::visitLabeledStmt(
+    const nodes::LabeledStatementNode *node) {
   // Just check the labeled statement
   return visitStmt(node->getStatement().get());
 }
 
 // Expression visitors
-std::shared_ptr<ResolvedType>
-TypeCheckVisitor::visitExpr(const nodes::ExpressionNode *node) {
+std::shared_ptr<ResolvedType> TypeCheckVisitor::visitExpr(
+    const nodes::ExpressionNode *node) {
   if (auto binary = dynamic_cast<const nodes::BinaryExpressionNode *>(node)) {
     return visitBinaryExpr(binary);
   } else if (auto unary =
@@ -864,8 +866,8 @@ TypeCheckVisitor::visitExpr(const nodes::ExpressionNode *node) {
   }
 }
 
-std::shared_ptr<ResolvedType>
-TypeCheckVisitor::visitBinaryExpr(const nodes::BinaryExpressionNode *node) {
+std::shared_ptr<ResolvedType> TypeCheckVisitor::visitBinaryExpr(
+    const nodes::BinaryExpressionNode *node) {
   auto leftType = visitExpr(node->getLeft().get());
   auto rightType = visitExpr(node->getRight().get());
 
@@ -873,30 +875,30 @@ TypeCheckVisitor::visitBinaryExpr(const nodes::BinaryExpressionNode *node) {
                        node->getLocation());
 }
 
-std::shared_ptr<ResolvedType>
-TypeCheckVisitor::visitUnaryExpr(const nodes::UnaryExpressionNode *node) {
+std::shared_ptr<ResolvedType> TypeCheckVisitor::visitUnaryExpr(
+    const nodes::UnaryExpressionNode *node) {
   auto operandType = visitExpr(node->getOperand().get());
-  return checkUnaryOp(node->getExpressionType(), operandType, node->isPrefix(),
+  return checkUnaryOp(node->getExpressionType(), operandType,
                       node->getLocation());
 }
 
-std::shared_ptr<ResolvedType>
-TypeCheckVisitor::visitLiteralExpr(const nodes::LiteralExpressionNode *node) {
+std::shared_ptr<ResolvedType> TypeCheckVisitor::visitLiteralExpr(
+    const nodes::LiteralExpressionNode *node) {
   switch (node->getExpressionType()) {
-  case tokens::TokenType::NUMBER:
-    if (node->getValue().find('.') != std::string::npos) {
-      return floatType_;
-    } else {
-      return intType_;
-    }
-  case tokens::TokenType::STRING_LITERAL:
-    return stringType_;
-  case tokens::TokenType::TRUE:
-  case tokens::TokenType::FALSE:
-    return boolType_;
-  default:
-    error(node->getLocation(), "Unknown literal type");
-    return errorType_;
+    case tokens::TokenType::NUMBER:
+      if (node->getValue().find('.') != std::string::npos) {
+        return floatType_;
+      } else {
+        return intType_;
+      }
+    case tokens::TokenType::STRING_LITERAL:
+      return stringType_;
+    case tokens::TokenType::TRUE:
+    case tokens::TokenType::FALSE:
+      return boolType_;
+    default:
+      error(node->getLocation(), "Unknown literal type");
+      return errorType_;
   }
 }
 
@@ -916,8 +918,8 @@ std::shared_ptr<ResolvedType> TypeCheckVisitor::visitIdentifierExpr(
   return varType;
 }
 
-std::shared_ptr<ResolvedType>
-TypeCheckVisitor::visitCallExpr(const nodes::CallExpressionNode *node) {
+std::shared_ptr<ResolvedType> TypeCheckVisitor::visitCallExpr(
+    const nodes::CallExpressionNode *node) {
   auto calleeType = visitExpr(node->getCallee().get());
 
   if (calleeType->getKind() != ResolvedType::TypeKind::Function) {
@@ -926,7 +928,7 @@ TypeCheckVisitor::visitCallExpr(const nodes::CallExpressionNode *node) {
   }
 
   return checkFunctionCall(calleeType, node->getArguments(),
-                           node->getTypeArguments(), node->getLocation());
+                           node->getLocation());
 }
 
 std::shared_ptr<ResolvedType> TypeCheckVisitor::visitAssignmentExpr(
@@ -946,24 +948,24 @@ std::shared_ptr<ResolvedType> TypeCheckVisitor::visitAssignmentExpr(
     // Compound assignment
     tokens::TokenType binaryOp;
     switch (op) {
-    case tokens::TokenType::PLUS_EQUALS:
-      binaryOp = tokens::TokenType::PLUS;
-      break;
-    case tokens::TokenType::MINUS_EQUALS:
-      binaryOp = tokens::TokenType::MINUS;
-      break;
-    case tokens::TokenType::STAR_EQUALS:
-      binaryOp = tokens::TokenType::STAR;
-      break;
-    case tokens::TokenType::SLASH_EQUALS:
-      binaryOp = tokens::TokenType::SLASH;
-      break;
-    case tokens::TokenType::PERCENT_EQUALS:
-      binaryOp = tokens::TokenType::PERCENT;
-      break;
-    default:
-      error(node->getLocation(), "Unsupported compound assignment operator");
-      return errorType_;
+      case tokens::TokenType::PLUS_EQUALS:
+        binaryOp = tokens::TokenType::PLUS;
+        break;
+      case tokens::TokenType::MINUS_EQUALS:
+        binaryOp = tokens::TokenType::MINUS;
+        break;
+      case tokens::TokenType::STAR_EQUALS:
+        binaryOp = tokens::TokenType::STAR;
+        break;
+      case tokens::TokenType::SLASH_EQUALS:
+        binaryOp = tokens::TokenType::SLASH;
+        break;
+      case tokens::TokenType::PERCENT_EQUALS:
+        binaryOp = tokens::TokenType::PERCENT;
+        break;
+      default:
+        error(node->getLocation(), "Unsupported compound assignment operator");
+        return errorType_;
     }
 
     auto resultType =
@@ -978,8 +980,8 @@ std::shared_ptr<ResolvedType> TypeCheckVisitor::visitAssignmentExpr(
   return targetType;
 }
 
-std::shared_ptr<ResolvedType>
-TypeCheckVisitor::visitMemberExpr(const nodes::MemberExpressionNode *node) {
+std::shared_ptr<ResolvedType> TypeCheckVisitor::visitMemberExpr(
+    const nodes::MemberExpressionNode *node) {
   auto objectType = visitExpr(node->getObject().get());
 
   // For now, just return error type since we don't have complete member lookup
@@ -988,8 +990,8 @@ TypeCheckVisitor::visitMemberExpr(const nodes::MemberExpressionNode *node) {
   return errorType_;
 }
 
-std::shared_ptr<ResolvedType>
-TypeCheckVisitor::visitIndexExpr(const nodes::IndexExpressionNode *node) {
+std::shared_ptr<ResolvedType> TypeCheckVisitor::visitIndexExpr(
+    const nodes::IndexExpressionNode *node) {
   auto arrayType = visitExpr(node->getArray().get());
   auto indexType = visitExpr(node->getIndex().get());
 
@@ -1005,8 +1007,8 @@ TypeCheckVisitor::visitIndexExpr(const nodes::IndexExpressionNode *node) {
   return arrayType->getElementType();
 }
 
-std::shared_ptr<ResolvedType>
-TypeCheckVisitor::visitNewExpr(const nodes::NewExpressionNode *node) {
+std::shared_ptr<ResolvedType> TypeCheckVisitor::visitNewExpr(
+    const nodes::NewExpressionNode *node) {
   auto classType = currentScope_->lookupType(node->getClassName());
   if (!classType) {
     error(node->getLocation(), "Undefined class: " + node->getClassName());
@@ -1021,8 +1023,8 @@ TypeCheckVisitor::visitNewExpr(const nodes::NewExpressionNode *node) {
   return classType;
 }
 
-std::shared_ptr<ResolvedType>
-TypeCheckVisitor::visitCastExpr(const nodes::CastExpressionNode *node) {
+std::shared_ptr<ResolvedType> TypeCheckVisitor::visitCastExpr(
+    const nodes::CastExpressionNode *node) {
   auto exprType = visitExpr(node->getExpression().get());
   auto targetType = currentScope_->lookupType(node->getTargetType());
 
@@ -1039,8 +1041,8 @@ TypeCheckVisitor::visitCastExpr(const nodes::CastExpressionNode *node) {
   return targetType;
 }
 
-std::shared_ptr<ResolvedType>
-TypeCheckVisitor::visitArrayLiteral(const nodes::ArrayLiteralNode *node) {
+std::shared_ptr<ResolvedType> TypeCheckVisitor::visitArrayLiteral(
+    const nodes::ArrayLiteralNode *node) {
   const auto &elements = node->getElements();
 
   if (elements.empty()) {
@@ -1085,8 +1087,8 @@ std::shared_ptr<ResolvedType> TypeCheckVisitor::visitConditionalExpr(
   }
 }
 
-std::shared_ptr<ResolvedType>
-TypeCheckVisitor::visitThisExpr(const nodes::ThisExpressionNode *node) {
+std::shared_ptr<ResolvedType> TypeCheckVisitor::visitThisExpr(
+    const nodes::ThisExpressionNode *node) {
   if (!currentClassType_) {
     error(node->getLocation(), "'this' can only be used inside a class");
     return errorType_;
@@ -1112,8 +1114,8 @@ std::shared_ptr<ResolvedType> TypeCheckVisitor::visitTemplateSpecialization(
   return baseType;
 }
 
-std::shared_ptr<ResolvedType>
-TypeCheckVisitor::visitPointerExpr(const nodes::PointerExpressionNode *node) {
+std::shared_ptr<ResolvedType> TypeCheckVisitor::visitPointerExpr(
+    const nodes::PointerExpressionNode *node) {
   auto operandType = visitExpr(node->getOperand().get());
 
   bool isUnsafe =
@@ -1122,8 +1124,8 @@ TypeCheckVisitor::visitPointerExpr(const nodes::PointerExpressionNode *node) {
       ResolvedType::Pointer(operandType, isUnsafe));
 }
 
-std::shared_ptr<ResolvedType>
-TypeCheckVisitor::visitFunctionExpr(const nodes::FunctionExpressionNode *node) {
+std::shared_ptr<ResolvedType> TypeCheckVisitor::visitFunctionExpr(
+    const nodes::FunctionExpressionNode *node) {
   // Process return type
   std::shared_ptr<ResolvedType> returnType;
   if (node->getReturnType()) {
@@ -1155,8 +1157,8 @@ TypeCheckVisitor::visitFunctionExpr(const nodes::FunctionExpressionNode *node) {
 }
 
 // Type visitors
-std::shared_ptr<ResolvedType>
-TypeCheckVisitor::visitType(const nodes::TypeNode *node) {
+std::shared_ptr<ResolvedType> TypeCheckVisitor::visitType(
+    const nodes::TypeNode *node) {
   if (auto primitive = dynamic_cast<const nodes::PrimitiveTypeNode *>(node)) {
     return visitPrimitiveType(primitive);
   } else if (auto named = dynamic_cast<const nodes::NamedTypeNode *>(node)) {
@@ -1196,27 +1198,27 @@ TypeCheckVisitor::visitType(const nodes::TypeNode *node) {
   }
 }
 
-std::shared_ptr<ResolvedType>
-TypeCheckVisitor::visitPrimitiveType(const nodes::PrimitiveTypeNode *node) {
+std::shared_ptr<ResolvedType> TypeCheckVisitor::visitPrimitiveType(
+    const nodes::PrimitiveTypeNode *node) {
   switch (node->getType()) {
-  case tokens::TokenType::VOID:
-    return voidType_;
-  case tokens::TokenType::INT:
-    return intType_;
-  case tokens::TokenType::FLOAT:
-    return floatType_;
-  case tokens::TokenType::BOOLEAN:
-    return boolType_;
-  case tokens::TokenType::STRING:
-    return stringType_;
-  default:
-    error(node->getLocation(), "Unknown primitive type");
-    return errorType_;
+    case tokens::TokenType::VOID:
+      return voidType_;
+    case tokens::TokenType::INT:
+      return intType_;
+    case tokens::TokenType::FLOAT:
+      return floatType_;
+    case tokens::TokenType::BOOLEAN:
+      return boolType_;
+    case tokens::TokenType::STRING:
+      return stringType_;
+    default:
+      error(node->getLocation(), "Unknown primitive type");
+      return errorType_;
   }
 }
 
-std::shared_ptr<ResolvedType>
-TypeCheckVisitor::visitNamedType(const nodes::NamedTypeNode *node) {
+std::shared_ptr<ResolvedType> TypeCheckVisitor::visitNamedType(
+    const nodes::NamedTypeNode *node) {
   auto type = currentScope_->lookupType(node->getName());
   if (!type) {
     error(node->getLocation(), "Undefined type: " + node->getName());
@@ -1225,8 +1227,8 @@ TypeCheckVisitor::visitNamedType(const nodes::NamedTypeNode *node) {
   return type;
 }
 
-std::shared_ptr<ResolvedType>
-TypeCheckVisitor::visitQualifiedType(const nodes::QualifiedTypeNode *node) {
+std::shared_ptr<ResolvedType> TypeCheckVisitor::visitQualifiedType(
+    const nodes::QualifiedTypeNode *node) {
   // For now, just treat as named type using the last qualifier
   const auto &qualifiers = node->getQualifiers();
   if (qualifiers.empty()) {
@@ -1243,8 +1245,8 @@ TypeCheckVisitor::visitQualifiedType(const nodes::QualifiedTypeNode *node) {
   return type;
 }
 
-std::shared_ptr<ResolvedType>
-TypeCheckVisitor::visitArrayType(const nodes::ArrayTypeNode *node) {
+std::shared_ptr<ResolvedType> TypeCheckVisitor::visitArrayType(
+    const nodes::ArrayTypeNode *node) {
   auto elementType = visitType(node->getElementType().get());
 
   if (node->getSize()) {
@@ -1257,8 +1259,8 @@ TypeCheckVisitor::visitArrayType(const nodes::ArrayTypeNode *node) {
   return std::make_shared<ResolvedType>(ResolvedType::Array(elementType));
 }
 
-std::shared_ptr<ResolvedType>
-TypeCheckVisitor::visitPointerType(const nodes::PointerTypeNode *node) {
+std::shared_ptr<ResolvedType> TypeCheckVisitor::visitPointerType(
+    const nodes::PointerTypeNode *node) {
   auto pointeeType = visitType(node->getBaseType().get());
   bool isUnsafe =
       node->getKind() == nodes::PointerTypeNode::PointerKind::Unsafe;
@@ -1266,14 +1268,14 @@ TypeCheckVisitor::visitPointerType(const nodes::PointerTypeNode *node) {
       ResolvedType::Pointer(pointeeType, isUnsafe));
 }
 
-std::shared_ptr<ResolvedType>
-TypeCheckVisitor::visitReferenceType(const nodes::ReferenceTypeNode *node) {
+std::shared_ptr<ResolvedType> TypeCheckVisitor::visitReferenceType(
+    const nodes::ReferenceTypeNode *node) {
   auto baseType = visitType(node->getBaseType().get());
   return std::make_shared<ResolvedType>(ResolvedType::Reference(baseType));
 }
 
-std::shared_ptr<ResolvedType>
-TypeCheckVisitor::visitFunctionType(const nodes::FunctionTypeNode *node) {
+std::shared_ptr<ResolvedType> TypeCheckVisitor::visitFunctionType(
+    const nodes::FunctionTypeNode *node) {
   auto returnType = visitType(node->getReturnType().get());
 
   std::vector<std::shared_ptr<ResolvedType>> paramTypes;
@@ -1285,8 +1287,8 @@ TypeCheckVisitor::visitFunctionType(const nodes::FunctionTypeNode *node) {
       ResolvedType::Function(returnType, paramTypes));
 }
 
-std::shared_ptr<ResolvedType>
-TypeCheckVisitor::visitTemplateType(const nodes::TemplateTypeNode *node) {
+std::shared_ptr<ResolvedType> TypeCheckVisitor::visitTemplateType(
+    const nodes::TemplateTypeNode *node) {
   auto baseType = visitType(node->getBaseType().get());
 
   std::vector<std::shared_ptr<ResolvedType>> argTypes;
@@ -1310,33 +1312,33 @@ std::shared_ptr<ResolvedType> TypeCheckVisitor::visitSmartPointerType(
 
   ResolvedType::SmartKind kind;
   switch (node->getKind()) {
-  case nodes::SmartPointerTypeNode::SmartPointerKind::Shared:
-    kind = ResolvedType::SmartKind::Shared;
-    break;
-  case nodes::SmartPointerTypeNode::SmartPointerKind::Unique:
-    kind = ResolvedType::SmartKind::Unique;
-    break;
-  case nodes::SmartPointerTypeNode::SmartPointerKind::Weak:
-    kind = ResolvedType::SmartKind::Weak;
-    break;
-  default:
-    error(node->getLocation(), "Unknown smart pointer kind");
-    return errorType_;
+    case nodes::SmartPointerTypeNode::SmartPointerKind::Shared:
+      kind = ResolvedType::SmartKind::Shared;
+      break;
+    case nodes::SmartPointerTypeNode::SmartPointerKind::Unique:
+      kind = ResolvedType::SmartKind::Unique;
+      break;
+    case nodes::SmartPointerTypeNode::SmartPointerKind::Weak:
+      kind = ResolvedType::SmartKind::Weak;
+      break;
+    default:
+      error(node->getLocation(), "Unknown smart pointer kind");
+      return errorType_;
   }
 
   return std::make_shared<ResolvedType>(ResolvedType::Smart(pointeeType, kind));
 }
 
-std::shared_ptr<ResolvedType>
-TypeCheckVisitor::visitUnionType(const nodes::UnionTypeNode *node) {
+std::shared_ptr<ResolvedType> TypeCheckVisitor::visitUnionType(
+    const nodes::UnionTypeNode *node) {
   auto leftType = visitType(node->getLeft().get());
   auto rightType = visitType(node->getRight().get());
   return std::make_shared<ResolvedType>(
       ResolvedType::Union(leftType, rightType));
 }
 
-std::shared_ptr<ResolvedType>
-TypeCheckVisitor::visitGenericParam(const nodes::GenericParamNode *node) {
+std::shared_ptr<ResolvedType> TypeCheckVisitor::visitGenericParam(
+    const nodes::GenericParamNode *node) {
   // Generic parameters are treated as named types during type checking
   auto genericType =
       std::make_shared<ResolvedType>(ResolvedType::Named(node->getName()));
@@ -1374,8 +1376,8 @@ void TypeCheckVisitor::enterScope() {
 void TypeCheckVisitor::exitScope() {
   if (currentScope_->createChildScope()) {
     currentScope_ =
-        currentScope_->createChildScope(); // This should be parent, but we
-                                           // don't have parent accessor
+        currentScope_->createChildScope();  // This should be parent, but we
+                                            // don't have parent accessor
   }
 }
 
@@ -1390,19 +1392,16 @@ void TypeCheckVisitor::exitFunctionScope() {
   exitScope();
 }
 
-std::shared_ptr<ResolvedType>
-TypeCheckVisitor::checkBinaryOp(tokens::TokenType op,
-                                std::shared_ptr<ResolvedType> leftType,
-                                std::shared_ptr<ResolvedType> rightType,
-                                const core::SourceLocation &location) {
-
+std::shared_ptr<ResolvedType> TypeCheckVisitor::checkBinaryOp(
+    tokens::TokenType op, std::shared_ptr<ResolvedType> leftType,
+    std::shared_ptr<ResolvedType> rightType,
+    const core::SourceLocation &location) {
   // Handle arithmetic operators
   if (tokens::isArithmeticOperator(op)) {
     if ((leftType->getKind() == ResolvedType::TypeKind::Int ||
          leftType->getKind() == ResolvedType::TypeKind::Float) &&
         (rightType->getKind() == ResolvedType::TypeKind::Int ||
          rightType->getKind() == ResolvedType::TypeKind::Float)) {
-
       if (leftType->getKind() == ResolvedType::TypeKind::Float ||
           rightType->getKind() == ResolvedType::TypeKind::Float) {
         return floatType_;
@@ -1458,56 +1457,55 @@ TypeCheckVisitor::checkBinaryOp(tokens::TokenType op,
 
 std::shared_ptr<ResolvedType> TypeCheckVisitor::checkUnaryOp(
     tokens::TokenType op, std::shared_ptr<ResolvedType> operandType,
-    bool isPrefix, const core::SourceLocation &location) {
-
+    const core::SourceLocation &location) {
   switch (op) {
-  case tokens::TokenType::PLUS:
-  case tokens::TokenType::MINUS:
-    if (operandType->getKind() == ResolvedType::TypeKind::Int ||
-        operandType->getKind() == ResolvedType::TypeKind::Float) {
-      return operandType;
-    }
-    error(location, "Unary +/- requires numeric operand");
-    return errorType_;
+    case tokens::TokenType::PLUS:
+    case tokens::TokenType::MINUS:
+      if (operandType->getKind() == ResolvedType::TypeKind::Int ||
+          operandType->getKind() == ResolvedType::TypeKind::Float) {
+        return operandType;
+      }
+      error(location, "Unary +/- requires numeric operand");
+      return errorType_;
 
-  case tokens::TokenType::EXCLAIM:
-    if (operandType->isImplicitlyConvertibleTo(*boolType_)) {
-      return boolType_;
-    }
-    error(location, "Logical NOT requires boolean operand");
-    return errorType_;
+    case tokens::TokenType::EXCLAIM:
+      if (operandType->isImplicitlyConvertibleTo(*boolType_)) {
+        return boolType_;
+      }
+      error(location, "Logical NOT requires boolean operand");
+      return errorType_;
 
-  case tokens::TokenType::TILDE:
-    if (operandType->getKind() == ResolvedType::TypeKind::Int) {
-      return intType_;
-    }
-    error(location, "Bitwise NOT requires integer operand");
-    return errorType_;
+    case tokens::TokenType::TILDE:
+      if (operandType->getKind() == ResolvedType::TypeKind::Int) {
+        return intType_;
+      }
+      error(location, "Bitwise NOT requires integer operand");
+      return errorType_;
 
-  case tokens::TokenType::PLUS_PLUS:
-  case tokens::TokenType::MINUS_MINUS:
-    if (operandType->getKind() == ResolvedType::TypeKind::Int ||
-        operandType->getKind() == ResolvedType::TypeKind::Float) {
-      return operandType;
-    }
-    error(location, "Increment/decrement requires numeric operand");
-    return errorType_;
+    case tokens::TokenType::PLUS_PLUS:
+    case tokens::TokenType::MINUS_MINUS:
+      if (operandType->getKind() == ResolvedType::TypeKind::Int ||
+          operandType->getKind() == ResolvedType::TypeKind::Float) {
+        return operandType;
+      }
+      error(location, "Increment/decrement requires numeric operand");
+      return errorType_;
 
-  case tokens::TokenType::STAR:
-    // Dereference operator
-    if (operandType->getKind() == ResolvedType::TypeKind::Pointer) {
-      return operandType->getPointeeType();
-    }
-    error(location, "Dereference requires pointer operand");
-    return errorType_;
+    case tokens::TokenType::STAR:
+      // Dereference operator
+      if (operandType->getKind() == ResolvedType::TypeKind::Pointer) {
+        return operandType->getPointeeType();
+      }
+      error(location, "Dereference requires pointer operand");
+      return errorType_;
 
-  case tokens::TokenType::AT:
-    // Address-of operator
-    return std::make_shared<ResolvedType>(ResolvedType::Pointer(operandType));
+    case tokens::TokenType::AT:
+      // Address-of operator
+      return std::make_shared<ResolvedType>(ResolvedType::Pointer(operandType));
 
-  default:
-    error(location, "Unhandled unary operator in type checking");
-    return errorType_;
+    default:
+      error(location, "Unhandled unary operator in type checking");
+      return errorType_;
   }
 }
 
@@ -1515,7 +1513,6 @@ bool TypeCheckVisitor::checkAssignmentCompatibility(
     std::shared_ptr<ResolvedType> targetType,
     std::shared_ptr<ResolvedType> valueType,
     const core::SourceLocation &location) {
-
   if (valueType->isAssignableTo(*targetType)) {
     return true;
   }
@@ -1528,9 +1525,7 @@ bool TypeCheckVisitor::checkAssignmentCompatibility(
 std::shared_ptr<ResolvedType> TypeCheckVisitor::checkFunctionCall(
     std::shared_ptr<ResolvedType> calleeType,
     const std::vector<nodes::ExpressionPtr> &args,
-    const std::vector<std::string> &typeArgs,
     const core::SourceLocation &location) {
-
   if (calleeType->getKind() != ResolvedType::TypeKind::Function) {
     error(location, "Cannot call non-function type");
     return errorType_;
@@ -1556,16 +1551,14 @@ std::shared_ptr<ResolvedType> TypeCheckVisitor::checkFunctionCall(
 
 std::shared_ptr<ResolvedType> TypeCheckVisitor::resolveGenericType(
     const std::string &name,
-    const std::vector<std::shared_ptr<ResolvedType>> &typeArgs,
-    const core::SourceLocation &location) {
-
+    const std::vector<std::shared_ptr<ResolvedType>> &typeArgs) {
   // For now, just return a template type
   return std::make_shared<ResolvedType>(ResolvedType::Template(name, typeArgs));
 }
 
 // Fix the visitDeclarationStmt method - there was a typo
-std::shared_ptr<ResolvedType>
-TypeCheckVisitor::visitDeclarationStmt(const nodes::DeclarationStmtNode *node) {
+std::shared_ptr<ResolvedType> TypeCheckVisitor::visitDeclarationStmt(
+    const nodes::DeclarationStmtNode *node) {
   auto decl = node->getDeclaration();
 
   if (auto varDecl = std::dynamic_pointer_cast<nodes::VarDeclNode>(decl)) {
@@ -1588,4 +1581,4 @@ TypeCheckVisitor::visitDeclarationStmt(const nodes::DeclarationStmtNode *node) {
   }
 }
 
-} // namespace visitors
+}  // namespace visitors

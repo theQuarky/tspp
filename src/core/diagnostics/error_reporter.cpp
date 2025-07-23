@@ -4,16 +4,17 @@
  *****************************************************************************/
 
 #include "error_reporter.h"
+
 #include <iostream>
 
 namespace core {
 
 namespace {
-const String RED = "\033[1;31m";    // Error
-const String YELLOW = "\033[1;33m"; // Warning
-const String BLUE = "\033[1;34m";   // Info
-const String RESET = "\033[0m";     // Reset color
-} // namespace
+const String RED = "\033[1;31m";     // Error
+const String YELLOW = "\033[1;33m";  // Warning
+const String BLUE = "\033[1;34m";    // Info
+const String RESET = "\033[0m";      // Reset color
+}  // namespace
 
 void ErrorReporter::error(const SourceLocation &location, const String &message,
                           const String &code) {
@@ -41,7 +42,7 @@ void ErrorReporter::report(Diagnostic::Severity severity,
                            const String &message, const String &code) {
   // Store diagnostic
   diagnostics_.emplace_back(severity, location, message, code);
-  auto &diag = diagnostics_.back();
+  // auto &diag = diagnostics_.back(); // Unused variable removed
 
   // Select color based on severity
   const String &color = severity == Diagnostic::Severity::Error     ? RED
@@ -91,4 +92,4 @@ void ErrorReporter::printAllErrors() const {
   }
 }
 
-} // namespace core
+}  // namespace core

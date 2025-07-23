@@ -30,6 +30,16 @@
 *.exe
 *.out
 *.app
+<<<<<<< HEAD
 build/*
 .cache/*
 combined_files
+=======
+
+*.tspp
+*.s
+*.bc
+*.ll
+build/*
+temp_exec
+>>>>>>> fb62773 (resolving warnings)

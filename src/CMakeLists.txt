@@ -32,7 +32,7 @@ add_library(parser
 )
 
 # New codegen library
-add_library(codegen
+add_library(tspp_codegen
     codegen/codegen_errors.cpp
     codegen/codegen_options.cpp
     codegen/llvm/llvm_context.cpp
@@ -62,8 +62,8 @@ target_link_libraries(lexer PUBLIC core tokens)
 target_link_libraries(parser PUBLIC core tokens)
 target_link_libraries(repl PUBLIC core tokens lexer parser)
 
-# Link codegen with LLVM and other dependencies
-target_link_libraries(codegen 
+# Link tspp_codegen with LLVM and other dependencies
+target_link_libraries(tspp_codegen 
     PUBLIC 
         core 
         parser
@@ -75,7 +75,7 @@ target_include_directories(core PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_include_directories(tokens PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_include_directories(lexer PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_include_directories(parser PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-target_include_directories(codegen PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(tspp_codegen PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_include_directories(repl PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 # Main executable
@@ -87,6 +87,6 @@ target_link_libraries(tspp
         tokens
         lexer
         parser
-        codegen
+        tspp_codegen
         repl
 )

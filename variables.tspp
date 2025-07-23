@@ -13,53 +13,53 @@ const b: int = 10;
 #stack const d: bool = true;
 
 /* 5. Fixed-size integer array initialization */
-let f: int[5] = 1;
+let f: int[5] = [1,2,3,4,5];
 
 /* 6. Dynamic-size float array with default initialization */
-let g: float[] = 0;
+let g: float[] = [0.02, 0.04, 0.06];
 
 /* 7. Unsafe pointer to integer with null initialization */
 let h: int@unsafe = 0;
 
-/* 8. Memory-aligned pointer to integer */
-let i: int@aligned(8) = 0;
+// /* 8. Memory-aligned pointer to integer */
+// let i: int@aligned(8) = 0;
 
-/* 9. Type-inferred integer with decimal value */
-let o = 100;
+// /* 9. Type-inferred integer with decimal value */
+// let o = 100;
 
-/* 10. Constant string variable with explicit type */
-const r: string = "test";
+// /* 10. Constant string variable with explicit type */
+// const r: string = "test";
 
-/* 11. Type-inferred constant boolean */
-const s = true;
+// /* 11. Type-inferred constant boolean */
+// const s = true;
 
-/* 12. Dynamic integer array with null initialization */
-let u: int[] = 0;
+// /* 12. Dynamic integer array with null initialization */
+// let u: int[] = 0;
 
-/* 13. 16-byte aligned pointer to integer */
-let w: int@aligned(16) = 0;
+// /* 13. 16-byte aligned pointer to integer */
+// let w: int@aligned(16) = 0;
 
-/* 14. Union type combining integer and boolean */
-let v: int | bool = 1;
+// /* 14. Union type combining integer and boolean */
+// let v: int | bool = 1;
 
-/* 15. Union type combining integer and float */
-let e: int | float = 0;
+// /* 15. Union type combining integer and float */
+// let e: int | float = 0;
 
-/* 16. Reference type to integer */
-let j: int& = 0;
+// /* 16. Reference type to integer */
+// let j: int& = 0;
 
-/* 17. Shared smart pointer to integer */
-let k: #shared<int> = 0;
+// /* 17. Shared smart pointer to integer */
+// let k: #shared<int> = 0;
 
-/* 18. Unique smart pointer to string */
-let l: #unique<string> = "hello";
+// /* 18. Unique smart pointer to string */
+// let l: #unique<string> = "hello";
 
-/* 19. Weak smart pointer to float */
-let m: #weak<float> = 0;
+// /* 19. Weak smart pointer to float */
+// let m: #weak<float> = 0;
 
-/* 20. Template type using Vector container */
-let n: Vector<int> = 0;
+// /* 20. Template type using Vector container */
+// let n: Vector<int> = 0;
 
-/* TODO when we do it for functions */
-/* 21. Inline-optimized integer variable */
-// #inline let p: int = 42;
+// /* TODO when we do it for functions */
+// /* 21. Inline-optimized integer variable */
+// // #inline let p: int = 42;

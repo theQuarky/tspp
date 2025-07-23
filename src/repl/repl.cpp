@@ -1,8 +1,10 @@
 #include "repl.h"
+
+#include <iostream>
+
 #include "../core/utils/log_utils.h"
 #include "../lexer/lexer.h"
 #include "../parser/parser.h"
-#include <iostream>
 
 namespace repl {
 
@@ -46,7 +48,7 @@ void Repl::processLine(const std::string &line) {
 
     // Print AST if enabled
     if (showAst_) {
-      const auto &ast = parser.getAST();
+      // const auto &ast = parser.getAST(); // Unused variable removed
       // TODO: Add AST printer visitor
       // parser::ASTPrinterVisitor printer;
       // printer.print(ast);
@@ -85,4 +87,4 @@ void Repl::start() {
   }
 }
 
-} // namespace repl
+}  // namespace repl

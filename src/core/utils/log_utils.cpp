@@ -1,7 +1,9 @@
 #include "core/utils/log_utils.h"
+
+#include <iomanip>
+
 #include "ast_printer.h"
 #include "lexer/patterns/token_maps.h"
-#include <iomanip>
 
 void printToken(const tokens::Token &token) {
   std::cout << "Token{type=" << static_cast<int>(token.getType())
@@ -41,6 +43,7 @@ void printAST(const parser::AST &ast) {
 }
 
 void printASTNode(const nodes::NodePtr &node, int indent) {
+  (void)indent;  // Suppress unused parameter warning
   core::ASTPrinter printer;
   printer.print(node);
 }

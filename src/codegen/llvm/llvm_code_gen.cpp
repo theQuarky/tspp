@@ -1,20 +1,24 @@
 #include "codegen/llvm/llvm_code_gen.h"
+
+#include <iostream>
+#include <regex>
+#include <sstream>
+
 #include "codegen/llvm/llvm_utils.h"
 #include "llvm/IR/Function.h"
 #include "llvm/IR/InlineAsm.h"
 #include "llvm/IR/Type.h"
 #include "llvm/IR/Verifier.h"
 #include "llvm/Transforms/Utils/Cloning.h"
-#include <iostream>
-#include <regex>
-#include <sstream>
 
 namespace codegen {
 
 LLVMCodeGen::LLVMCodeGen(core::ErrorReporter &errorReporter,
                          const std::string &moduleName)
-    : errorReporter_(errorReporter), context_(moduleName),
-      typeBuilder_(context_), optimizer_(context_) {}
+    : errorReporter_(errorReporter),
+      context_(moduleName),
+      typeBuilder_(context_),
+      optimizer_(context_) {}
 
 bool LLVMCodeGen::generateCode(const parser::AST &ast) {
   try {
@@ -80,7 +84,7 @@ void LLVMCodeGen::declareExternalFunctions() {
     printfArgs.push_back(llvm::Type::getInt8Ty(llvmContext));
     llvm::FunctionType *printfType =
         llvm::FunctionType::get(llvm::Type::getInt32Ty(llvmContext), printfArgs,
-                                true // varargs
+                                true  // varargs
         );
     llvm::Function::Create(printfType, llvm::Function::ExternalLinkage,
                            "printf", module);
@@ -92,7 +96,7 @@ void LLVMCodeGen::declareExternalFunctions() {
     putsArgs.push_back(llvm::Type::getInt8Ty(llvmContext));
     llvm::FunctionType *putsType =
         llvm::FunctionType::get(llvm::Type::getInt32Ty(llvmContext), putsArgs,
-                                false // not varargs
+                                false  // not varargs
         );
     llvm::Function::Create(putsType, llvm::Function::ExternalLinkage, "puts",
                            module);
@@ -101,7 +105,7 @@ void LLVMCodeGen::declareExternalFunctions() {
   // Declare malloc and free for dynamic allocation
   if (!module.getFunction("malloc")) {
     std::vector<llvm::Type *> mallocArgs;
-    mallocArgs.push_back(llvm::Type::getInt64Ty(llvmContext)); // size_t
+    mallocArgs.push_back(llvm::Type::getInt64Ty(llvmContext));  // size_t
     llvm::FunctionType *mallocType = llvm::FunctionType::get(
         llvm::Type::getInt8Ty(llvmContext), mallocArgs, false);
     llvm::Function::Create(mallocType, llvm::Function::ExternalLinkage,
@@ -185,7 +189,7 @@ bool LLVMCodeGen::visitFunctionDecl(const nodes::FunctionDeclNode *node) {
 
     for (const auto &param : node->getParameters()) {
       // Use type builder for proper type conversion
-      auto paramType = llvm::Type::getInt32Ty(llvmContext); // Simplified
+      auto paramType = llvm::Type::getInt32Ty(llvmContext);  // Simplified
       paramTypes.push_back(paramType);
       paramNames.push_back(param->getName());
     }
@@ -194,7 +198,7 @@ bool LLVMCodeGen::visitFunctionDecl(const nodes::FunctionDeclNode *node) {
     llvm::Type *returnType = llvm::Type::getInt32Ty(llvmContext);
     if (node->getReturnType()) {
       // Use type builder for proper type conversion
-      returnType = llvm::Type::getInt32Ty(llvmContext); // Simplified
+      returnType = llvm::Type::getInt32Ty(llvmContext);  // Simplified
     }
 
     llvm::FunctionType *functionType =
@@ -266,7 +270,7 @@ bool LLVMCodeGen::visitGlobalVarDecl(const nodes::VarDeclNode *node) {
     }
 
     // Determine variable type
-    llvm::Type *varType = llvm::Type::getInt32Ty(llvmContext); // Simplified
+    llvm::Type *varType = llvm::Type::getInt32Ty(llvmContext);  // Simplified
 
     llvm::Constant *initializer = llvm::Constant::getNullValue(varType);
 
@@ -293,9 +297,10 @@ bool LLVMCodeGen::visitGlobalVarDecl(const nodes::VarDeclNode *node) {
       tempFunc->eraseFromParent();
     }
 
-    llvm::GlobalVariable *globalVar = new llvm::GlobalVariable(
-        module, varType, node->isConst(), llvm::GlobalValue::ExternalLinkage,
-        initializer, node->getName());
+    // Unused variable 'globalVar' removed to suppress warning
+    new llvm::GlobalVariable(module, varType, node->isConst(),
+                             llvm::GlobalValue::ExternalLinkage, initializer,
+                             node->getName());
 
     return true;
   } catch (const std::exception &e) {
@@ -373,7 +378,7 @@ llvm::Function *LLVMCodeGen::createDefaultMainFunction() {
 
 bool LLVMCodeGen::visitAssemblyStatement(const nodes::AssemblyStmtNode *node) {
   auto &builder = context_.getBuilder();
-  auto &llvmContext = context_.getContext();
+  // auto &llvmContext = context_.getContext(); // Unused variable removed
   auto &module = context_.getModule();
 
   try {
@@ -402,6 +407,7 @@ bool LLVMCodeGen::visitAssemblyStatement(const nodes::AssemblyStmtNode *node) {
 
     // For other assembly code, create inline assembly
     std::vector<llvm::Type *> asmParamTypes;
+    auto &llvmContext = context_.getContext();
     llvm::FunctionType *asmType = llvm::FunctionType::get(
         llvm::Type::getVoidTy(llvmContext), asmParamTypes, false);
 
@@ -423,7 +429,7 @@ bool LLVMCodeGen::visitExpressionStatement(
     // Visit the expression (this might have side effects)
     if (node->getExpression()) {
       LLVMValue result = visitExpr(node->getExpression().get());
-      return result.isValid() || true; // Allow invalid results for statements
+      return result.isValid() || true;  // Allow invalid results for statements
     }
     return true;
   } catch (const std::exception &e) {
@@ -497,8 +503,7 @@ std::string LLVMCodeGen::getCurrentNamespacePrefix() const {
 
   std::stringstream ss;
   for (size_t i = 0; i < currentNamespace_.size(); ++i) {
-    if (i > 0)
-      ss << "::";
+    if (i > 0) ss << "::";
     ss << currentNamespace_[i];
   }
   ss << "::";
@@ -535,7 +540,7 @@ LLVMValue LLVMCodeGen::visitVarDecl(const nodes::VarDeclNode *node,
 
   // Register variable in current scope
   if (currentFunction_) {
-    LLVMValue varValue(alloca, nullptr, true); // It's an lvalue
+    LLVMValue varValue(alloca, nullptr, true);  // It's an lvalue
     currentFunction_->declareVariable(node->getName(), varValue);
   }
 
@@ -607,37 +612,37 @@ LLVMValue LLVMCodeGen::visitExpr(const nodes::ExpressionNode *node) {
   return LLVMValue();
 }
 
-LLVMValue
-LLVMCodeGen::visitLiteralExpr(const nodes::LiteralExpressionNode *node) {
+LLVMValue LLVMCodeGen::visitLiteralExpr(
+    const nodes::LiteralExpressionNode *node) {
   auto &llvmContext = context_.getContext();
 
   switch (node->getExpressionType()) {
-  case tokens::TokenType::NUMBER: {
-    try {
-      int value = std::stoi(node->getValue());
-      auto intType = llvm::Type::getInt32Ty(llvmContext);
-      auto intValue = llvm::ConstantInt::get(intType, value);
-      return LLVMValue(intValue, nullptr);
-    } catch (const std::exception &e) {
-      error(core::SourceLocation(),
-            "Invalid number literal: " + node->getValue());
-      return LLVMValue();
+    case tokens::TokenType::NUMBER: {
+      try {
+        int value = std::stoi(node->getValue());
+        auto intType = llvm::Type::getInt32Ty(llvmContext);
+        auto intValue = llvm::ConstantInt::get(intType, value);
+        return LLVMValue(intValue, nullptr);
+      } catch (const std::exception &e) {
+        error(core::SourceLocation(),
+              "Invalid number literal: " + node->getValue());
+        return LLVMValue();
+      }
     }
-  }
-  case tokens::TokenType::STRING_LITERAL: {
-    auto strValue = LLVMUtils::createGlobalString(context_, node->getValue());
-    return LLVMValue(strValue, nullptr);
-  }
-  case tokens::TokenType::TRUE:
-  case tokens::TokenType::FALSE: {
-    bool value = (node->getExpressionType() == tokens::TokenType::TRUE);
-    auto boolValue =
-        llvm::ConstantInt::get(llvm::Type::getInt1Ty(llvmContext), value);
-    return LLVMValue(boolValue, nullptr);
-  }
-  default:
-    error(core::SourceLocation(), "Unsupported literal type");
-    return LLVMValue();
+    case tokens::TokenType::STRING_LITERAL: {
+      auto strValue = LLVMUtils::createGlobalString(context_, node->getValue());
+      return LLVMValue(strValue, nullptr);
+    }
+    case tokens::TokenType::TRUE:
+    case tokens::TokenType::FALSE: {
+      bool value = (node->getExpressionType() == tokens::TokenType::TRUE);
+      auto boolValue =
+          llvm::ConstantInt::get(llvm::Type::getInt1Ty(llvmContext), value);
+      return LLVMValue(boolValue, nullptr);
+    }
+    default:
+      error(core::SourceLocation(), "Unsupported literal type");
+      return LLVMValue();
   }
 }
 
@@ -722,33 +727,51 @@ void LLVMCodeGen::warning(const core::SourceLocation &location,
 }
 
 // Stub implementations for other required methods
-void LLVMCodeGen::visitGlobalDecl(const nodes::NodePtr &node) {}
-void LLVMCodeGen::visitClassDecl(const nodes::ClassDeclNode *node) {}
-void LLVMCodeGen::visitNamespaceDecl(const nodes::NamespaceDeclNode *node) {}
-void LLVMCodeGen::visitEnumDecl(const nodes::EnumDeclNode *node) {}
-void LLVMCodeGen::visitInterfaceDecl(const nodes::InterfaceDeclNode *node) {}
+void LLVMCodeGen::visitGlobalDecl(const nodes::NodePtr &node) {
+  (void)node;
+}
+void LLVMCodeGen::visitClassDecl(const nodes::ClassDeclNode *node) {
+  (void)node;
+}
+void LLVMCodeGen::visitNamespaceDecl(const nodes::NamespaceDeclNode *node) {
+  (void)node;
+}
+void LLVMCodeGen::visitEnumDecl(const nodes::EnumDeclNode *node) {
+  (void)node;
+}
+void LLVMCodeGen::visitInterfaceDecl(const nodes::InterfaceDeclNode *node) {
+  (void)node;
+}
 LLVMValue LLVMCodeGen::visitParameter(const nodes::ParameterNode *node) {
+  (void)node;
   return LLVMValue();
 }
 LLVMValue LLVMCodeGen::visitIfStmt(const nodes::IfStmtNode *node) {
+  (void)node;
   return LLVMValue();
 }
 LLVMValue LLVMCodeGen::visitWhileStmt(const nodes::WhileStmtNode *node) {
+  (void)node;
   return LLVMValue();
 }
 LLVMValue LLVMCodeGen::visitDoWhileStmt(const nodes::DoWhileStmtNode *node) {
+  (void)node;
   return LLVMValue();
 }
 LLVMValue LLVMCodeGen::visitForStmt(const nodes::ForStmtNode *node) {
+  (void)node;
   return LLVMValue();
 }
 LLVMValue LLVMCodeGen::visitForOfStmt(const nodes::ForOfStmtNode *node) {
+  (void)node;
   return LLVMValue();
 }
 LLVMValue LLVMCodeGen::visitReturnStmt(const nodes::ReturnStmtNode *node) {
+  (void)node;
   return LLVMValue();
 }
 LLVMValue LLVMCodeGen::visitBreakStmt(const nodes::BreakStmtNode *node) {
+  (void)node;
   return LLVMValue();
 }
 LLVMValue LLVMCodeGen::visitContinueStmt(const nodes::ContinueStmtNode *node) {
@@ -761,6 +784,7 @@ LLVMValue LLVMCodeGen::visitContinueStmt(const nodes::ContinueStmtNode *node) {
   }
 
   builder.CreateBr(currentLoop->continueDest);
+  (void)node;
   return LLVMValue();
 }
 
@@ -784,8 +808,8 @@ LLVMValue LLVMCodeGen::visitDeclStmt(const nodes::DeclarationStmtNode *node) {
   return LLVMValue();
 }
 
-LLVMValue
-LLVMCodeGen::visitBinaryExpr(const nodes::BinaryExpressionNode *node) {
+LLVMValue LLVMCodeGen::visitBinaryExpr(
+    const nodes::BinaryExpressionNode *node) {
   auto &builder = context_.getBuilder();
   auto &llvmContext = context_.getContext();
 
@@ -804,116 +828,116 @@ LLVMCodeGen::visitBinaryExpr(const nodes::BinaryExpressionNode *node) {
   llvm::Value *result = nullptr;
 
   switch (node->getExpressionType()) {
-  case tokens::TokenType::PLUS:
-    if (leftVal->getType()->isIntegerTy() &&
-        rightVal->getType()->isIntegerTy()) {
-      result = builder.CreateAdd(leftVal, rightVal, "add");
-    } else if (leftVal->getType()->isFloatingPointTy() ||
-               rightVal->getType()->isFloatingPointTy()) {
-      // Handle float addition (would need proper type conversion)
-      result = builder.CreateFAdd(leftVal, rightVal, "fadd");
-    }
-    break;
+    case tokens::TokenType::PLUS:
+      if (leftVal->getType()->isIntegerTy() &&
+          rightVal->getType()->isIntegerTy()) {
+        result = builder.CreateAdd(leftVal, rightVal, "add");
+      } else if (leftVal->getType()->isFloatingPointTy() ||
+                 rightVal->getType()->isFloatingPointTy()) {
+        // Handle float addition (would need proper type conversion)
+        result = builder.CreateFAdd(leftVal, rightVal, "fadd");
+      }
+      break;
 
-  case tokens::TokenType::MINUS:
-    if (leftVal->getType()->isIntegerTy() &&
-        rightVal->getType()->isIntegerTy()) {
-      result = builder.CreateSub(leftVal, rightVal, "sub");
-    } else {
-      result = builder.CreateFSub(leftVal, rightVal, "fsub");
-    }
-    break;
+    case tokens::TokenType::MINUS:
+      if (leftVal->getType()->isIntegerTy() &&
+          rightVal->getType()->isIntegerTy()) {
+        result = builder.CreateSub(leftVal, rightVal, "sub");
+      } else {
+        result = builder.CreateFSub(leftVal, rightVal, "fsub");
+      }
+      break;
 
-  case tokens::TokenType::STAR:
-    if (leftVal->getType()->isIntegerTy() &&
-        rightVal->getType()->isIntegerTy()) {
-      result = builder.CreateMul(leftVal, rightVal, "mul");
-    } else {
-      result = builder.CreateFMul(leftVal, rightVal, "fmul");
-    }
-    break;
+    case tokens::TokenType::STAR:
+      if (leftVal->getType()->isIntegerTy() &&
+          rightVal->getType()->isIntegerTy()) {
+        result = builder.CreateMul(leftVal, rightVal, "mul");
+      } else {
+        result = builder.CreateFMul(leftVal, rightVal, "fmul");
+      }
+      break;
 
-  case tokens::TokenType::SLASH:
-    if (leftVal->getType()->isIntegerTy() &&
-        rightVal->getType()->isIntegerTy()) {
-      result = builder.CreateSDiv(leftVal, rightVal, "div");
-    } else {
-      result = builder.CreateFDiv(leftVal, rightVal, "fdiv");
-    }
-    break;
+    case tokens::TokenType::SLASH:
+      if (leftVal->getType()->isIntegerTy() &&
+          rightVal->getType()->isIntegerTy()) {
+        result = builder.CreateSDiv(leftVal, rightVal, "div");
+      } else {
+        result = builder.CreateFDiv(leftVal, rightVal, "fdiv");
+      }
+      break;
 
-  case tokens::TokenType::PERCENT:
-    if (leftVal->getType()->isIntegerTy() &&
-        rightVal->getType()->isIntegerTy()) {
-      result = builder.CreateSRem(leftVal, rightVal, "mod");
-    }
-    break;
+    case tokens::TokenType::PERCENT:
+      if (leftVal->getType()->isIntegerTy() &&
+          rightVal->getType()->isIntegerTy()) {
+        result = builder.CreateSRem(leftVal, rightVal, "mod");
+      }
+      break;
 
-  case tokens::TokenType::EQUALS_EQUALS:
-    if (leftVal->getType()->isIntegerTy() &&
-        rightVal->getType()->isIntegerTy()) {
-      result = builder.CreateICmpEQ(leftVal, rightVal, "eq");
-    } else {
-      result = builder.CreateFCmpOEQ(leftVal, rightVal, "feq");
-    }
-    break;
+    case tokens::TokenType::EQUALS_EQUALS:
+      if (leftVal->getType()->isIntegerTy() &&
+          rightVal->getType()->isIntegerTy()) {
+        result = builder.CreateICmpEQ(leftVal, rightVal, "eq");
+      } else {
+        result = builder.CreateFCmpOEQ(leftVal, rightVal, "feq");
+      }
+      break;
 
-  case tokens::TokenType::EXCLAIM_EQUALS:
-    if (leftVal->getType()->isIntegerTy() &&
-        rightVal->getType()->isIntegerTy()) {
-      result = builder.CreateICmpNE(leftVal, rightVal, "ne");
-    } else {
-      result = builder.CreateFCmpONE(leftVal, rightVal, "fne");
-    }
-    break;
+    case tokens::TokenType::EXCLAIM_EQUALS:
+      if (leftVal->getType()->isIntegerTy() &&
+          rightVal->getType()->isIntegerTy()) {
+        result = builder.CreateICmpNE(leftVal, rightVal, "ne");
+      } else {
+        result = builder.CreateFCmpONE(leftVal, rightVal, "fne");
+      }
+      break;
 
-  case tokens::TokenType::LEFT_BRACKET:
-    if (leftVal->getType()->isIntegerTy() &&
-        rightVal->getType()->isIntegerTy()) {
-      result = builder.CreateICmpSLT(leftVal, rightVal, "lt");
-    } else {
-      result = builder.CreateFCmpOLT(leftVal, rightVal, "flt");
-    }
-    break;
+    case tokens::TokenType::LEFT_BRACKET:
+      if (leftVal->getType()->isIntegerTy() &&
+          rightVal->getType()->isIntegerTy()) {
+        result = builder.CreateICmpSLT(leftVal, rightVal, "lt");
+      } else {
+        result = builder.CreateFCmpOLT(leftVal, rightVal, "flt");
+      }
+      break;
 
-  case tokens::TokenType::RIGHT_BRACKET:
-    if (leftVal->getType()->isIntegerTy() &&
-        rightVal->getType()->isIntegerTy()) {
-      result = builder.CreateICmpSGT(leftVal, rightVal, "gt");
-    } else {
-      result = builder.CreateFCmpOGT(leftVal, rightVal, "fgt");
-    }
-    break;
+    case tokens::TokenType::RIGHT_BRACKET:
+      if (leftVal->getType()->isIntegerTy() &&
+          rightVal->getType()->isIntegerTy()) {
+        result = builder.CreateICmpSGT(leftVal, rightVal, "gt");
+      } else {
+        result = builder.CreateFCmpOGT(leftVal, rightVal, "fgt");
+      }
+      break;
 
-  case tokens::TokenType::LESS_EQUALS:
-    if (leftVal->getType()->isIntegerTy() &&
-        rightVal->getType()->isIntegerTy()) {
-      result = builder.CreateICmpSLE(leftVal, rightVal, "le");
-    } else {
-      result = builder.CreateFCmpOLE(leftVal, rightVal, "fle");
-    }
-    break;
+    case tokens::TokenType::LESS_EQUALS:
+      if (leftVal->getType()->isIntegerTy() &&
+          rightVal->getType()->isIntegerTy()) {
+        result = builder.CreateICmpSLE(leftVal, rightVal, "le");
+      } else {
+        result = builder.CreateFCmpOLE(leftVal, rightVal, "fle");
+      }
+      break;
 
-  case tokens::TokenType::GREATER_EQUALS:
-    if (leftVal->getType()->isIntegerTy() &&
-        rightVal->getType()->isIntegerTy()) {
-      result = builder.CreateICmpSGE(leftVal, rightVal, "ge");
-    } else {
-      result = builder.CreateFCmpOGE(leftVal, rightVal, "fge");
-    }
-    break;
+    case tokens::TokenType::GREATER_EQUALS:
+      if (leftVal->getType()->isIntegerTy() &&
+          rightVal->getType()->isIntegerTy()) {
+        result = builder.CreateICmpSGE(leftVal, rightVal, "ge");
+      } else {
+        result = builder.CreateFCmpOGE(leftVal, rightVal, "fge");
+      }
+      break;
 
-    // case tokens::TokenType::LOGICAL_AND:
-    //   result = builder.CreateAnd(leftVal, rightVal, "and");
-    //   break;
+      // case tokens::TokenType::LOGICAL_AND:
+      //   result = builder.CreateAnd(leftVal, rightVal, "and");
+      //   break;
 
-    // case tokens::TokenType::LOGICAL_OR:
-    //   result = builder.CreateOr(leftVal, rightVal, "or");
-    //   break;
+      // case tokens::TokenType::LOGICAL_OR:
+      //   result = builder.CreateOr(leftVal, rightVal, "or");
+      //   break;
 
-  default:
-    error(core::SourceLocation(), "Unsupported binary operator");
-    return LLVMValue();
+    default:
+      error(core::SourceLocation(), "Unsupported binary operator");
+      return LLVMValue();
   }
 
   if (!result) {
@@ -938,44 +962,44 @@ LLVMValue LLVMCodeGen::visitUnaryExpr(const nodes::UnaryExpressionNode *node) {
   llvm::Value *result = nullptr;
 
   switch (node->getOperand()->getExpressionType()) {
-  case tokens::TokenType::MINUS:
-    if (operandVal->getType()->isIntegerTy()) {
-      result = builder.CreateNeg(operandVal, "neg");
-    } else {
-      result = builder.CreateFNeg(operandVal, "fneg");
-    }
-    break;
+    case tokens::TokenType::MINUS:
+      if (operandVal->getType()->isIntegerTy()) {
+        result = builder.CreateNeg(operandVal, "neg");
+      } else {
+        result = builder.CreateFNeg(operandVal, "fneg");
+      }
+      break;
 
-  case tokens::TokenType::PLUS:
-    // Unary plus is essentially a no-op
-    result = operandVal;
-    break;
+    case tokens::TokenType::PLUS:
+      // Unary plus is essentially a no-op
+      result = operandVal;
+      break;
 
-  case tokens::TokenType::EXCLAIM:
-    result = builder.CreateNot(operandVal, "not");
-    break;
+    case tokens::TokenType::EXCLAIM:
+      result = builder.CreateNot(operandVal, "not");
+      break;
 
-  case tokens::TokenType::PLUS_PLUS:
-    if (operand.isLValue()) {
-      llvm::Value *one = llvm::ConstantInt::get(operandVal->getType(), 1);
-      result = builder.CreateAdd(operandVal, one, "inc");
-      builder.CreateStore(result, operand.getValue());
-      return operand; // Return the lvalue for pre-increment
-    }
-    break;
+    case tokens::TokenType::PLUS_PLUS:
+      if (operand.isLValue()) {
+        llvm::Value *one = llvm::ConstantInt::get(operandVal->getType(), 1);
+        result = builder.CreateAdd(operandVal, one, "inc");
+        builder.CreateStore(result, operand.getValue());
+        return operand;  // Return the lvalue for pre-increment
+      }
+      break;
 
-  case tokens::TokenType::MINUS_MINUS:
-    if (operand.isLValue()) {
-      llvm::Value *one = llvm::ConstantInt::get(operandVal->getType(), 1);
-      result = builder.CreateSub(operandVal, one, "dec");
-      builder.CreateStore(result, operand.getValue());
-      return operand; // Return the lvalue for pre-decrement
-    }
-    break;
+    case tokens::TokenType::MINUS_MINUS:
+      if (operand.isLValue()) {
+        llvm::Value *one = llvm::ConstantInt::get(operandVal->getType(), 1);
+        result = builder.CreateSub(operandVal, one, "dec");
+        builder.CreateStore(result, operand.getValue());
+        return operand;  // Return the lvalue for pre-decrement
+      }
+      break;
 
-  default:
-    error(core::SourceLocation(), "Unsupported unary operator");
-    return LLVMValue();
+    default:
+      error(core::SourceLocation(), "Unsupported unary operator");
+      return LLVMValue();
   }
 
   if (!result) {
@@ -986,8 +1010,8 @@ LLVMValue LLVMCodeGen::visitUnaryExpr(const nodes::UnaryExpressionNode *node) {
   return LLVMValue(result, nullptr);
 }
 
-LLVMValue
-LLVMCodeGen::visitIdentifierExpr(const nodes::IdentifierExpressionNode *node) {
+LLVMValue LLVMCodeGen::visitIdentifierExpr(
+    const nodes::IdentifierExpressionNode *node) {
   std::string name = node->getName();
 
   // First, look for local variables
@@ -1001,7 +1025,7 @@ LLVMCodeGen::visitIdentifierExpr(const nodes::IdentifierExpressionNode *node) {
   // Then look for global variables
   auto &module = context_.getModule();
   if (llvm::GlobalVariable *globalVar = module.getGlobalVariable(name)) {
-    return LLVMValue(globalVar, nullptr, true); // Global variables are lvalues
+    return LLVMValue(globalVar, nullptr, true);  // Global variables are lvalues
   }
 
   // Look for functions
@@ -1061,16 +1085,16 @@ LLVMValue LLVMCodeGen::visitCallExpr(const nodes::CallExpressionNode *node) {
   return LLVMValue(result, nullptr);
 }
 
-LLVMValue
-LLVMCodeGen::visitMemberExpr(const nodes::MemberExpressionNode *node) {
+LLVMValue LLVMCodeGen::visitMemberExpr(
+    const nodes::MemberExpressionNode *node) {
   return LLVMValue();
 }
 LLVMValue LLVMCodeGen::visitIndexExpr(const nodes::IndexExpressionNode *node) {
   return LLVMValue();
 }
 
-LLVMValue
-LLVMCodeGen::visitAssignmentExpr(const nodes::AssignmentExpressionNode *node) {
+LLVMValue LLVMCodeGen::visitAssignmentExpr(
+    const nodes::AssignmentExpressionNode *node) {
   auto &builder = context_.getBuilder();
 
   // Get the left-hand side (must be an lvalue)
@@ -1108,4 +1132,4 @@ LLVMValue LLVMCodeGen::visitArrayLiteral(const nodes::ArrayLiteralNode *node) {
   return LLVMValue();
 }
 
-} // namespace codegen
+}  // namespace codegen

@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "codegen/codegen_options.h"
 #include "codegen/llvm/llvm_code_gen.h"
 #include "core/diagnostics/error_reporter.h"
@@ -6,7 +8,6 @@
 #include "lexer/lexer.h"
 #include "parser/parser.h"
 #include "repl/repl.h"
-#include <iostream>
 
 int main(int argc, char *argv[]) {
   try {
@@ -19,7 +20,7 @@ int main(int argc, char *argv[]) {
     }
 
     const std::string filePath = argv[1];
-
+    std::cout << "Compiling file: " << filePath << std::endl;
     if (core::utils::FileUtils::getExtension(filePath) != "tspp") {
       std::cerr << "Error: File must have .tspp extension\n";
       return 1;
@@ -60,7 +61,7 @@ int main(int argc, char *argv[]) {
     if (!ast.getNodes().empty()) {
       // Create code generator
       codegen::CodeGenOptions options;
-      options.setOutputFilename(filePath + ".ll"); // Output LLVM IR
+      options.setOutputFilename(filePath + ".ll");  // Output LLVM IR
 
       codegen::LLVMCodeGen codeGen(errorReporter);
 

@@ -1,11 +1,13 @@
 #include "codegen/llvm/llvm_utils.h"
+
+#include <sstream>
+#include <string>
+
 #include "llvm/IR/Constant.h"
 #include "llvm/IR/Constants.h"
 #include "llvm/IR/Function.h"
 #include "llvm/IR/GlobalVariable.h"
 #include "llvm/IR/Instructions.h"
-#include <sstream>
-#include <string>
 
 namespace codegen {
 namespace LLVMUtils {
@@ -17,7 +19,7 @@ llvm::Value *createGlobalString(LLVMContext &context, const std::string &str,
 
   // Create a global string constant
   llvm::Constant *strConstant = llvm::ConstantDataArray::getString(
-      context.getContext(), str, true // Include null terminator
+      context.getContext(), str, true  // Include null terminator
   );
 
   // Create a unique name if none is provided
@@ -32,7 +34,7 @@ llvm::Value *createGlobalString(LLVMContext &context, const std::string &str,
   // Create a global variable for the string
   llvm::GlobalVariable *globalStr = new llvm::GlobalVariable(
       module, strConstant->getType(),
-      true, // isConstant
+      true,  // isConstant
       llvm::GlobalValue::PrivateLinkage, strConstant, varName);
 
   // Get a pointer to the first character
@@ -48,7 +50,7 @@ llvm::Value *createIntConstant(LLVMContext &context, int64_t value,
                                unsigned bits) {
   return llvm::ConstantInt::get(
       llvm::Type::getIntNTy(context.getContext(), bits), value,
-      true // Signed
+      true  // Signed
   );
 }
 
@@ -68,7 +70,9 @@ llvm::Value *createBoolConstant(LLVMContext &context, bool value) {
                                 value ? 1 : 0);
 }
 
-llvm::Value *createNullPointer(LLVMContext &context, llvm::PointerType *type) {
+llvm::Value *createNullPointer(LLVMContext & /*context*/,
+                               llvm::PointerType *type) {
+  // Suppress unused parameter warning for 'context'
   return llvm::ConstantPointerNull::get(type);
 }
 
@@ -98,18 +102,18 @@ LLVMValue castNumeric(LLVMContext &context, const LLVMValue &value,
   llvm::Type *toLLVMType = nullptr;
 
   switch (toType->getKind()) {
-  case visitors::ResolvedType::TypeKind::Int:
-    toLLVMType = llvm::Type::getInt32Ty(context.getContext());
-    break;
-  case visitors::ResolvedType::TypeKind::Float:
-    toLLVMType = llvm::Type::getFloatTy(context.getContext());
-    break;
-  case visitors::ResolvedType::TypeKind::Bool:
-    toLLVMType = llvm::Type::getInt1Ty(context.getContext());
-    break;
-  default:
-    // If not a primitive type, return as is
-    return value;
+    case visitors::ResolvedType::TypeKind::Int:
+      toLLVMType = llvm::Type::getInt32Ty(context.getContext());
+      break;
+    case visitors::ResolvedType::TypeKind::Float:
+      toLLVMType = llvm::Type::getFloatTy(context.getContext());
+      break;
+    case visitors::ResolvedType::TypeKind::Bool:
+      toLLVMType = llvm::Type::getInt1Ty(context.getContext());
+      break;
+    default:
+      // If not a primitive type, return as is
+      return value;
   }
 
   // Perform the cast
@@ -206,7 +210,7 @@ void emitRuntimeError(LLVMContext &context, const std::string &message) {
         llvm::Type::getInt32Ty(context.getContext()),
         {llvm::PointerType::get(llvm::Type::getInt8Ty(context.getContext()),
                                 0)},
-        true // varargs
+        true  // varargs
     );
 
     printfFunc = llvm::Function::Create(
@@ -244,7 +248,6 @@ void emitRuntimeError(LLVMContext &context, const std::string &message) {
 std::string mangleFunctionName(
     const std::string &name,
     const std::vector<std::shared_ptr<visitors::ResolvedType>> &paramTypes) {
-
   std::stringstream mangled;
 
   // Start with the base name
@@ -258,40 +261,40 @@ std::string mangleFunctionName(
 
     // Simple parameter mangling based on type kind
     switch (paramType->getKind()) {
-    case visitors::ResolvedType::TypeKind::Void:
-      mangled << "v";
-      break;
-    case visitors::ResolvedType::TypeKind::Int:
-      mangled << "i";
-      break;
-    case visitors::ResolvedType::TypeKind::Float:
-      mangled << "f";
-      break;
-    case visitors::ResolvedType::TypeKind::Bool:
-      mangled << "b";
-      break;
-    case visitors::ResolvedType::TypeKind::String:
-      mangled << "PKc"; // Pointer to constant char
-      break;
-    case visitors::ResolvedType::TypeKind::Pointer:
-      mangled << "P";
-      // Recursively mangle the pointee type
-      // This is a simplification - a real implementation would recurse
-      mangled << "v"; // Assume void* for now
-      break;
-    case visitors::ResolvedType::TypeKind::Named: {
-      std::string typeName = paramType->getName();
-      mangled << typeName.length() << typeName;
-      break;
-    }
-    default:
-      mangled << "u"; // Unknown/unsupported type
-      break;
+      case visitors::ResolvedType::TypeKind::Void:
+        mangled << "v";
+        break;
+      case visitors::ResolvedType::TypeKind::Int:
+        mangled << "i";
+        break;
+      case visitors::ResolvedType::TypeKind::Float:
+        mangled << "f";
+        break;
+      case visitors::ResolvedType::TypeKind::Bool:
+        mangled << "b";
+        break;
+      case visitors::ResolvedType::TypeKind::String:
+        mangled << "PKc";  // Pointer to constant char
+        break;
+      case visitors::ResolvedType::TypeKind::Pointer:
+        mangled << "P";
+        // Recursively mangle the pointee type
+        // This is a simplification - a real implementation would recurse
+        mangled << "v";  // Assume void* for now
+        break;
+      case visitors::ResolvedType::TypeKind::Named: {
+        std::string typeName = paramType->getName();
+        mangled << typeName.length() << typeName;
+        break;
+      }
+      default:
+        mangled << "u";  // Unknown/unsupported type
+        break;
     }
   }
 
   return mangled.str();
 }
 
-} // namespace LLVMUtils
-} // namespace codegen
+}  // namespace LLVMUtils
+}  // namespace codegen

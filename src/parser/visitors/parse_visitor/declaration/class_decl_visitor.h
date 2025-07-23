@@ -1,4 +1,7 @@
 #pragma once
+#include <iostream>
+#include <ostream>
+
 #include "core/diagnostics/error_reporter.h"
 #include "ideclaration_visitor.h"
 #include "parser/nodes/declaration_nodes.h"
@@ -6,24 +9,24 @@
 #include "parser/visitors/parse_visitor/statement/istatement_visitor.h"
 #include "tokens/stream/token_stream.h"
 #include "tokens/token_type.h"
-#include <iostream>
-#include <ostream>
 
 namespace visitors {
 
 class ClassDeclarationVisitor {
-public:
+ public:
   ClassDeclarationVisitor(tokens::TokenStream &tokens,
                           core::ErrorReporter &errorReporter,
                           IDeclarationVisitor &declVisitor,
                           IExpressionVisitor &exprVisitor,
                           IStatementVisitor &stmtVisitor)
-      : tokens_(tokens), errorReporter_(errorReporter),
-        declVisitor_(declVisitor), exprVisitor_(exprVisitor),
+      : tokens_(tokens),
+        errorReporter_(errorReporter),
+        declVisitor_(declVisitor),
+        exprVisitor_(exprVisitor),
         stmtVisitor_(stmtVisitor) {}
 
-  nodes::DeclPtr
-  parseClassDecl(const std::vector<tokens::TokenType> &initialModifiers = {}) {
+  nodes::DeclPtr parseClassDecl(
+      const std::vector<tokens::TokenType> &initialModifiers = {}) {
     auto location = tokens_.peek().getLocation();
     std::vector<tokens::TokenType> modifiers = initialModifiers;
 
@@ -112,7 +115,7 @@ public:
 
     // Consume the closing brace if present
     if (tokens_.peek().getLexeme() == "}") {
-      tokens_.advance(); // Advance without error reporting
+      tokens_.advance();  // Advance without error reporting
     } else {
       error("Expected '}' at end of class declaration");
     }
@@ -142,7 +145,7 @@ public:
       if (accessLexeme == "public" || accessLexeme == "private" ||
           accessLexeme == "protected") {
         accessModifier = tokens_.peek().getType();
-        tokens_.advance(); // consume it
+        tokens_.advance();  // consume it
       }
 
       // Handle different member types USING LEXEMES
@@ -174,8 +177,9 @@ public:
 
   // Add support for nested classes
   nodes::DeclPtr parseNestedClass(tokens::TokenType accessModifier) {
+    (void)accessModifier;  // Suppress unused parameter warning
     // We've already verified this is a "class" token
-    tokens_.advance(); // Consume "class"
+    tokens_.advance();  // Consume "class"
 
     // Use the same class parsing logic, but track that it's a nested class
     auto location = tokens_.previous().getLocation();
@@ -328,7 +332,7 @@ public:
       return nullptr;
     }
 
-    tokens_.advance(); // Consume the opening brace
+    tokens_.advance();  // Consume the opening brace
     auto body = stmtVisitor_.parseBlock();
     if (!body) {
       return nullptr;
@@ -340,9 +344,9 @@ public:
   }
 
   // Update the function declaration to accept modifiers
-  nodes::DeclPtr
-  parseMethod(tokens::TokenType accessModifier,
-              const std::vector<tokens::TokenType> &methodModifiers = {}) {
+  nodes::DeclPtr parseMethod(
+      tokens::TokenType accessModifier,
+      const std::vector<tokens::TokenType> &methodModifiers = {}) {
     auto location = tokens_.peek().getLocation();
 
     // Consume the 'function' keyword - using lexeme check
@@ -409,7 +413,7 @@ public:
       return nullptr;
     }
 
-    tokens_.advance(); // Consume the opening brace
+    tokens_.advance();  // Consume the opening brace
     auto body = stmtVisitor_.parseBlock();
     if (!body) {
       return nullptr;
@@ -523,7 +527,7 @@ public:
       return nullptr;
     }
 
-    tokens_.advance(); // Consume the opening brace
+    tokens_.advance();  // Consume the opening brace
     auto body = stmtVisitor_.parseBlock();
     if (!body) {
       return nullptr;
@@ -590,7 +594,7 @@ public:
       return nullptr;
     }
 
-    tokens_.advance(); // Consume the opening brace
+    tokens_.advance();  // Consume the opening brace
     auto body = stmtVisitor_.parseBlock();
     if (!body) {
       return nullptr;
@@ -662,7 +666,7 @@ public:
       if (tokens_.peek().getLexeme() != ",") {
         break;
       }
-      tokens_.advance(); // Consume comma
+      tokens_.advance();  // Consume comma
 
     } while (true);
 
@@ -671,7 +675,7 @@ public:
       error("Expected '>' after generic parameters");
       return false;
     }
-    tokens_.advance(); // Consume '>'
+    tokens_.advance();  // Consume '>'
     return true;
   }
 
@@ -688,7 +692,7 @@ public:
       if (tokens_.peek().getLexeme() != ",") {
         break;
       }
-      tokens_.advance(); // Consume comma
+      tokens_.advance();  // Consume comma
     }
     return true;
   }
@@ -742,7 +746,7 @@ public:
         isConst, loc);
   }
 
-private:
+ private:
   bool match(tokens::TokenType type) {
     if (check(type)) {
       tokens_.advance();
@@ -767,8 +771,7 @@ private:
   void synchronize() {
     tokens_.advance();
     while (!tokens_.isAtEnd()) {
-      if (tokens_.previous().getLexeme() == ";")
-        return;
+      if (tokens_.previous().getLexeme() == ";") return;
 
       // Use lexeme checks for keywords
       std::string lexeme = tokens_.peek().getLexeme();
@@ -793,4 +796,4 @@ private:
   IStatementVisitor &stmtVisitor_;
 };
 
-} // namespace visitors
+}  // namespace visitors

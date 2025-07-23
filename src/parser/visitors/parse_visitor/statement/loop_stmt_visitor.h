@@ -8,13 +8,15 @@
 namespace visitors {
 
 class LoopStatementVisitor {
-public:
+ public:
   LoopStatementVisitor(tokens::TokenStream &tokens,
                        core::ErrorReporter &errorReporter,
                        IExpressionVisitor &exprVisitor,
                        IStatementVisitor &stmtVisitor)
-      : tokens_(tokens), errorReporter_(errorReporter),
-        exprVisitor_(exprVisitor), stmtVisitor_(stmtVisitor) {}
+      : tokens_(tokens),
+        errorReporter_(errorReporter),
+        exprVisitor_(exprVisitor),
+        stmtVisitor_(stmtVisitor) {}
 
   // Parse while statement: while (condition) statement
   nodes::StmtPtr parseWhileStatement() {
@@ -25,8 +27,7 @@ public:
     }
 
     auto condition = exprVisitor_.parseExpression();
-    if (!condition)
-      return nullptr;
+    if (!condition) return nullptr;
 
     if (!consume(tokens::TokenType::RIGHT_PAREN,
                  "Expected ')' after condition")) {
@@ -34,8 +35,7 @@ public:
     }
 
     auto body = stmtVisitor_.parseStatement();
-    if (!body)
-      return nullptr;
+    if (!body) return nullptr;
 
     return std::make_shared<nodes::WhileStmtNode>(condition, body, location);
   }
@@ -45,8 +45,7 @@ public:
     auto location = tokens_.previous().getLocation();
 
     auto body = stmtVisitor_.parseStatement();
-    if (!body)
-      return nullptr;
+    if (!body) return nullptr;
 
     if (!consume(tokens::TokenType::WHILE, "Expected 'while' after do block")) {
       return nullptr;
@@ -57,8 +56,7 @@ public:
     }
 
     auto condition = exprVisitor_.parseExpression();
-    if (!condition)
-      return nullptr;
+    if (!condition) return nullptr;
 
     if (!consume(tokens::TokenType::RIGHT_PAREN,
                  "Expected ')' after condition")) {
@@ -102,15 +100,13 @@ public:
     nodes::TypePtr type;
     if (match(tokens::TokenType::COLON)) {
       type = exprVisitor_.parseType();
-      if (!type)
-        return nullptr;
+      if (!type) return nullptr;
     }
 
     // Check for 'of' keyword
     if (match(tokens::TokenType::OF)) {
       auto iterable = exprVisitor_.parseExpression();
-      if (!iterable)
-        return nullptr;
+      if (!iterable) return nullptr;
 
       if (!consume(tokens::TokenType::RIGHT_PAREN,
                    "Expected ')' after for-of clause")) {
@@ -118,8 +114,7 @@ public:
       }
 
       auto body = stmtVisitor_.parseStatement();
-      if (!body)
-        return nullptr;
+      if (!body) return nullptr;
 
       return std::make_shared<nodes::ForOfStmtNode>(isConst, identifier,
                                                     iterable, body, location);
@@ -129,14 +124,14 @@ public:
     return parseForWithDecl(location, isConst, identifier, type);
   }
 
-private:
+ private:
   // Parse rest of for-of loop after 'of' keyword
   nodes::StmtPtr parseForOfRest(const core::SourceLocation &location,
                                 bool isConst, const std::string &identifier,
                                 nodes::TypePtr varType) {
+    (void)varType;  // Suppress unused parameter warning
     auto iterable = exprVisitor_.parseExpression();
-    if (!iterable)
-      return nullptr;
+    if (!iterable) return nullptr;
 
     if (!consume(tokens::TokenType::RIGHT_PAREN,
                  "Expected ')' after for-of clause")) {
@@ -144,8 +139,7 @@ private:
     }
 
     auto body = stmtVisitor_.parseStatement();
-    if (!body)
-      return nullptr;
+    if (!body) return nullptr;
 
     return std::make_shared<nodes::ForOfStmtNode>(isConst, identifier, iterable,
                                                   body, location);
@@ -162,8 +156,7 @@ private:
     }
 
     auto initialValue = exprVisitor_.parseExpression();
-    if (!initialValue)
-      return nullptr;
+    if (!initialValue) return nullptr;
 
     // Create variable declaration
     auto varDecl = std::make_shared<nodes::VarDeclNode>(
@@ -187,8 +180,7 @@ private:
     nodes::StmtPtr initializer;
     if (!match(tokens::TokenType::SEMICOLON)) {
       auto expr = exprVisitor_.parseExpression();
-      if (!expr)
-        return nullptr;
+      if (!expr) return nullptr;
 
       if (!consume(tokens::TokenType::SEMICOLON,
                    "Expected ';' after for loop initializer")) {
@@ -208,8 +200,7 @@ private:
     nodes::ExpressionPtr condition;
     if (!match(tokens::TokenType::SEMICOLON)) {
       condition = exprVisitor_.parseExpression();
-      if (!condition)
-        return nullptr;
+      if (!condition) return nullptr;
 
       if (!consume(tokens::TokenType::SEMICOLON,
                    "Expected ';' after for loop condition")) {
@@ -221,8 +212,7 @@ private:
     nodes::ExpressionPtr increment;
     if (!check(tokens::TokenType::RIGHT_PAREN)) {
       increment = exprVisitor_.parseExpression();
-      if (!increment)
-        return nullptr;
+      if (!increment) return nullptr;
     }
 
     if (!consume(tokens::TokenType::RIGHT_PAREN,
@@ -231,8 +221,7 @@ private:
     }
 
     auto body = stmtVisitor_.parseStatement();
-    if (!body)
-      return nullptr;
+    if (!body) return nullptr;
 
     return std::make_shared<nodes::ForStmtNode>(initializer, condition,
                                                 increment, body, location);
@@ -270,4 +259,4 @@ private:
   IStatementVisitor &stmtVisitor_;
 };
 
-} // namespace visitors
+}  // namespace visitors

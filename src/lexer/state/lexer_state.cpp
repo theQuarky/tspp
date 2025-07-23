@@ -20,7 +20,8 @@ std::string_view LexerState::getCurrentLexeme() const {
 }
 
 char LexerState::getCurrentChar() const {
-  if (position_ >= source_.length() || position_ < 0) {
+  // position_ is unsigned, so position_ < 0 is always false
+  if (position_ >= source_.length()) {
     return '\0';
   }
   return source_[position_];
@@ -54,7 +55,7 @@ std::string_view LexerState::getLineContent() const {
   if (lineStart == std::string::npos) {
     lineStart = 0;
   } else {
-    lineStart++; // Skip newline character
+    lineStart++;  // Skip newline character
   }
 
   // Find end of current line
@@ -71,13 +72,12 @@ std::string_view LexerState::getLineContent() const {
  *****************************************************************************/
 
 void LexerState::advance(size_t count) {
-  if (count == 0)
-    return;
+  if (count == 0) return;
 
   // Advance position and track columns, handling tabs
   for (size_t i = 0; i < count && !isAtEnd(); ++i) {
     if (getCurrentChar() == '\t') {
-      column_ += 4; // Use 4 spaces per tab
+      column_ += 4;  // Use 4 spaces per tab
     } else {
       column_++;
     }
@@ -101,7 +101,6 @@ void LexerState::newLine() {
     if (lastToken.getType() != tokens::TokenType::SEMICOLON &&
         lastToken.getType() != tokens::TokenType::LEFT_BRACE &&
         lastToken.getType() != tokens::TokenType::RIGHT_BRACE) {
-
       addToken(tokens::Token(tokens::TokenType::SEMICOLON, ";",
                              core::SourceLocation(line_ - 1, column_)));
     }
@@ -132,4 +131,4 @@ const tokens::Token &LexerState::getLastToken() const {
   return tokens_.back();
 }
 
-} // namespace lexer
+}  // namespace lexer
